@@ -373,6 +373,8 @@
                     <h3>🔄 컨트롤</h3>
                     <button id="resetBtn">초기화</button>
                     <button id="pauseBtn">일시정지</button>
+                    <button id="resetGraphBtn">그래프 초기화</button>  <!-- 이 줄 추가 -->
+
                 </div>
             </div>
             
@@ -465,6 +467,9 @@
                 document.getElementById('resetBtn').addEventListener('click', () => this.reset());
                 document.getElementById('pauseBtn').addEventListener('click', () => this.togglePause());
                 document.getElementById('indicatorSelect').addEventListener('change', () => this.updateIndicator());
+                document.getElementById('resetGraphBtn').addEventListener('click', () => this.resetGraph());
+
+
             }
             
             addAcid() {
@@ -1058,6 +1063,45 @@ const yScale = height / maxValue;
                 const btn = document.getElementById('pauseBtn');
                 btn.textContent = this.isPaused ? '재생' : '일시정지';
             }
+
+            resetGraph() {
+    // 그래프 데이터만 초기화 (현재 이온 상태는 유지)
+    this.graphData = {
+        additions: [],
+        H: [],
+        OH: [],
+        Na: [],
+        Cl: [],
+        Ca: [],
+        CO3: [],
+        total: [],
+        temperature: []
+    };
+    this.additionCount = 0;  // 첨가 횟수 리셋
+    
+    // 빈 그래프 그리기
+    this.drawGraph();
+    
+    // 현재 상태를 첫 번째 데이터 포인트로 추가
+    const counts = {
+        H: 0, OH: 0, Na: 0, Cl: 0, Ca: 0, CO3: 0
+    };
+    
+    this.ions.forEach(ion => {
+        counts[ion.type]++;
+    });
+    
+    this.graphData.additions.push(0);
+    Object.keys(counts).forEach(key => {
+        this.graphData[key].push(counts[key]);
+    });
+    
+    const total = Object.values(counts).reduce((sum, count) => sum + count, 0);
+    this.graphData.total.push(total);
+    this.graphData.temperature.push(this.temperature);
+    
+    this.drawGraph();
+}
             
             reset() {
                 this.ions.forEach(ion => ion.element.remove());
