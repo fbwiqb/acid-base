@@ -821,7 +821,7 @@
                     total: { color: '#333333', offset: 0, dash: [] }
                 };
                 
-                ['H', 'OH', 'Na', 'Cl', 'total'].forEach(key => {
+                ['H', 'OH', 'Na', 'Cl'].forEach(key => {
                     if (this.graphData[key].length === 0) return;
                     
                     const config = lineConfig[key];
@@ -851,7 +851,6 @@
                     { key: 'OH', label: 'OH⁻', dash: [] },
                     { key: 'Na', label: 'Na⁺', dash: [5, 3] },
                     { key: 'Cl', label: 'Cl⁻', dash: [3, 3] },
-                    { key: 'total', label: '총 이온', dash: [] }
                 ];
                 
                 legendItems.forEach(item => {
