@@ -382,7 +382,7 @@
                 this.temperature = 25; // 초기 온도
                 this.neutralizationCount = 0;
                 this.graphData = {
-                    time: [],
+                    additions: [],
                     H: [],
                     OH: [],
                     Na: [],
@@ -392,6 +392,7 @@
                     total: [],
                     temperature: []
                 };
+                this.additionCount = 0;
                 this.timeStep = 0;
                 
                 this.ionShapes = {
@@ -806,7 +807,7 @@
                     ctx.stroke();
                 }
                 
-                if (this.graphData.time.length === 0) return;
+                if (this.graphData.additions.length === 0) return;
                 
                 const maxValue = Math.max(...this.graphData.total, 10);
                 const xScale = width / Math.max(50, this.graphData.additions.length);
