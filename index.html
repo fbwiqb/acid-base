@@ -592,14 +592,14 @@
                             const distance = Math.sqrt(dx * dx + dy * dy);
                             
                             if (distance > 0) {
-                                const force = 500 / (distance + 50);
+                                const force = 200 / (distance + 50);
                                 ionObj.vx += force * dx / distance;
                                 ionObj.vy += force * dy / distance;
                             }
                         });
                         
                         // 속도 제한
-                        const maxSpeed = 3;
+                        const maxSpeed = 2;
                         const speed = Math.sqrt(ionObj.vx * ionObj.vx + ionObj.vy * ionObj.vy);
                         if (speed > maxSpeed) {
                             ionObj.vx = (ionObj.vx / speed) * maxSpeed;
@@ -621,7 +621,7 @@
                             const distance = Math.sqrt(dx * dx + dy * dy);
                             
                             if (distance > 0) {
-                                const force = 500 / (distance + 50);
+                                const force = 200 / (distance + 50);
                                 ionObj.vx += force * dx / distance;
                                 ionObj.vy += force * dy / distance;
                             }
