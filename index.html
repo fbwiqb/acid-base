@@ -480,10 +480,14 @@
 
             }
             
-            addAcid() {
+    addAcid() {
+    // 이미 첨가 중이면 무시
+    if (this.isAddingIons) return;
+    
     const acidType = document.getElementById('acidSelect').value;
     
-    this.additionCount++;  // 추가
+    this.isAddingIons = true;  // 첨가 시작
+    this.additionCount++;
     
     if (acidType === 'HCl') {
         this.addIon('H', 1);
@@ -498,13 +502,18 @@
         this.updateStats();
         this.updateGraph();
         this.updateIndicator();
-    }, 1500);  // 1초 후 업데이트
+        this.isAddingIons = false;  // 첨가 완료
+    }, 1500);
 }
             
-           addBase() {
+addBase() {
+    // 이미 첨가 중이면 무시
+    if (this.isAddingIons) return;
+    
     const baseType = document.getElementById('baseSelect').value;
     
-    this.additionCount++;  // 추가
+    this.isAddingIons = true;  // 첨가 시작
+    this.additionCount++;
     
     if (baseType === 'NaOH') {
         this.addIon('Na', 1);
@@ -519,7 +528,8 @@
         this.updateStats();
         this.updateGraph();
         this.updateIndicator();
-    }, 1500);  // 1초 후 업데이트
+        this.isAddingIons = false;  // 첨가 완료
+    }, 1500);
 }
             
             addIon(type, count = 1) {
@@ -664,7 +674,7 @@
                         });
                         
                         // 속도 제한
-                        const maxSpeed = 2;
+                        const maxSpeed = 3;
                         const speed = Math.sqrt(ionObj.vx * ionObj.vx + ionObj.vy * ionObj.vy);
                         if (speed > maxSpeed) {
                             ionObj.vx = (ionObj.vx / speed) * maxSpeed;
@@ -692,7 +702,7 @@
                             }
                         });
                         
-                        const maxSpeed = 2;
+                        const maxSpeed = 3;
                         const speed = Math.sqrt(ionObj.vx * ionObj.vx + ionObj.vy * ionObj.vy);
                         if (speed > maxSpeed) {
                             ionObj.vx = (ionObj.vx / speed) * maxSpeed;
