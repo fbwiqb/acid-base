@@ -1,1 +1,1058 @@
-fadf 
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>중화반응 시뮬레이션</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 250px 1fr 350px;
+            gap: 30px;
+        }
+        
+        .control-panel {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .control-section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .control-section:last-child {
+            border-bottom: none;
+        }
+        
+        .control-section h3 {
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        select, input[type="range"], button {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        select:hover, input[type="range"]:hover {
+            border-color: #667eea;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .simulation-area {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        
+        #beaker {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(200,230,255,0.3) 100%);
+            border: 3px solid #333;
+            border-top: none;
+            border-radius: 0 0 50px 50px;
+            position: relative;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        
+        .ion {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            transition: transform 0.3s;
+            cursor: grab;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .ion:active {
+            cursor: grabbing;
+            transform: scale(1.1);
+        }
+        
+        .ion.H {
+            background: radial-gradient(circle, #ff6b6b, #ff5252);
+            color: white;
+        }
+        
+        .ion.OH {
+            background: radial-gradient(circle, #4dabf7, #339af0);
+            color: white;
+        }
+        
+        .ion.Na {
+            background: radial-gradient(circle, #a29bfe, #6c5ce7);
+            color: white;
+        }
+        
+        .ion.Cl {
+            background: radial-gradient(circle, #55a3ff, #0088ff);
+            color: white;
+        }
+        
+        .ion.Ca {
+            background: radial-gradient(circle, #ffa94d, #fd7e14);
+            color: white;
+        }
+        
+        .ion.CO3 {
+            background: radial-gradient(circle, #69db7c, #51cf66);
+            color: white;
+        }
+        
+        .ion.shape-mode {
+            font-size: 24px;
+        }
+        
+        .graph-container {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        #ionGraph {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: white;
+        }
+        
+        .stats {
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        
+        .stat-label {
+            font-weight: 500;
+            color: #666;
+        }
+        
+        .stat-value {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .indicator-display {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.5s;
+            min-height: 100px;
+        }
+        
+        .ph-acidic { background: #ffcdd2; color: #c62828; }
+        .ph-neutral { background: #c8e6c9; color: #2e7d32; }
+        .ph-basic { background: #bbdefb; color: #1565c0; }
+        
+        .toggle-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .toggle-btn {
+            flex: 1;
+            padding: 8px;
+            background: #e0e0e0;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .toggle-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #5a67d8;
+        }
+        
+        .dropper {
+            display: inline-block;
+            padding: 8px 15px;
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .dropper:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .dropper:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 중화반응 시뮬레이션</h1>
+        
+        <div class="main-content">
+            <!-- 컨트롤 패널 -->
+            <div class="control-panel">
+                <div class="control-section">
+                    <h3>⚗️ 용액 선택</h3>
+                    <div class="control-group">
+                        <label>산성 용액:</label>
+                        <select id="acidSelect">
+                            <option value="HCl">염산 (HCl)</option>
+                            <option value="H2CO3">탄산 (H₂CO₃)</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>염기성 용액:</label>
+                        <select id="baseSelect">
+                            <option value="NaOH">수산화나트륨 (NaOH)</option>
+                            <option value="Ca(OH)2">수산화칼슘 (Ca(OH)₂)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="control-section">
+                    <h3>🎨 지시약 선택</h3>
+                    <select id="indicatorSelect">
+                        <option value="none">없음 (온도 측정)</option>
+                        <option value="btb">BTB 용액</option>
+                        <option value="phenol">페놀프탈레인</option>
+                        <option value="methyl">메틸오렌지</option>
+                    </select>
+                </div>
+                
+                <div class="control-section">
+                    <h3>👁️ 표시 옵션</h3>
+                    <div class="toggle-group">
+                        <button class="toggle-btn active" id="ionModeBtn">이온식</button>
+                        <button class="toggle-btn" id="shapeModeBtn">도형</button>
+                    </div>
+                    <button id="toggleSpectatorBtn">구경꾼 이온 숨기기</button>
+                    <button id="enlargeReactiveBtn">반응 이온 크게</button>
+                </div>
+                
+                <div class="control-section">
+                    <h3>🔄 컨트롤</h3>
+                    <button id="resetBtn">초기화</button>
+                    <button id="pauseBtn">일시정지</button>
+                </div>
+            </div>
+            
+            <!-- 시뮬레이션 영역 -->
+            <div class="simulation-area">
+                <div style="text-align: center;">
+                    <span class="dropper" id="acidDropper">산 첨가 💧</span>
+                    <span class="dropper" id="baseDropper">염기 첨가 💧</span>
+                </div>
+                <div id="beaker"></div>
+                <div class="indicator-display" id="indicatorDisplay">
+                    지시약: 없음
+                </div>
+            </div>
+            
+            <!-- 그래프 영역 -->
+            <div class="graph-container">
+                <h3>📊 이온 농도 변화</h3>
+                <canvas id="ionGraph"></canvas>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-label">H⁺ 이온:</span>
+                        <span class="stat-value" id="hCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">OH⁻ 이온:</span>
+                        <span class="stat-value" id="ohCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Na⁺ 이온:</span>
+                        <span class="stat-value" id="naCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Cl⁻ 이온:</span>
+                        <span class="stat-value" id="clCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">총 이온 수:</span>
+                        <span class="stat-value" id="totalCount">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class NeutralizationSimulation {
+            constructor() {
+                this.ions = [];
+                this.isPaused = false;
+                this.isShapeMode = false;
+                this.spectatorHidden = false;
+                this.reactiveEnlarged = false;
+                this.temperature = 25; // 초기 온도
+                this.neutralizationCount = 0;
+                this.graphData = {
+                    time: [],
+                    H: [],
+                    OH: [],
+                    Na: [],
+                    Cl: [],
+                    Ca: [],
+                    CO3: [],
+                    total: [],
+                    temperature: []
+                };
+                this.timeStep = 0;
+                
+                this.ionShapes = {
+                    H: '●',
+                    OH: '▲',
+                    Na: '■',
+                    Cl: '◆',
+                    Ca: '★',
+                    CO3: '⬟'
+                };
+                
+                this.init();
+            }
+            
+            init() {
+                this.beaker = document.getElementById('beaker');
+                this.setupEventListeners();
+                this.setupGraph();
+                this.startAnimation();
+            }
+            
+            setupEventListeners() {
+                document.getElementById('acidDropper').addEventListener('click', () => this.addAcid());
+                document.getElementById('baseDropper').addEventListener('click', () => this.addBase());
+                document.getElementById('ionModeBtn').addEventListener('click', () => this.setDisplayMode('ion'));
+                document.getElementById('shapeModeBtn').addEventListener('click', () => this.setDisplayMode('shape'));
+                document.getElementById('toggleSpectatorBtn').addEventListener('click', () => this.toggleSpectatorIons());
+                document.getElementById('enlargeReactiveBtn').addEventListener('click', () => this.toggleReactiveSize());
+                document.getElementById('resetBtn').addEventListener('click', () => this.reset());
+                document.getElementById('pauseBtn').addEventListener('click', () => this.togglePause());
+                document.getElementById('indicatorSelect').addEventListener('change', () => this.updateIndicator());
+            }
+            
+            addAcid() {
+                const acidType = document.getElementById('acidSelect').value;
+                
+                if (acidType === 'HCl') {
+                    this.addIon('H', 1);
+                    this.addIon('Cl', 1);
+                } else if (acidType === 'H2CO3') {
+                    this.addIon('H', 2);
+                    this.addIon('CO3', 1);
+                }
+                
+                this.updateStats();
+                this.updateGraph();
+                this.updateIndicator();
+            }
+            
+            addBase() {
+                const baseType = document.getElementById('baseSelect').value;
+                
+                if (baseType === 'NaOH') {
+                    this.addIon('Na', 1);
+                    this.addIon('OH', 1);
+                } else if (baseType === 'Ca(OH)2') {
+                    this.addIon('Ca', 1);
+                    this.addIon('OH', 2);
+                }
+                
+                this.updateStats();
+                this.updateGraph();
+                this.updateIndicator();
+            }
+            
+            addIon(type, count = 1) {
+                for (let i = 0; i < count; i++) {
+                    const ion = document.createElement('div');
+                    ion.className = `ion ${type}`;
+                    ion.dataset.type = type;
+                    
+                    const x = Math.random() * (this.beaker.offsetWidth - 40);
+                    const y = Math.random() * (this.beaker.offsetHeight - 40);
+                    ion.style.left = x + 'px';
+                    ion.style.top = y + 'px';
+                    
+                    this.updateIonDisplay(ion);
+                    this.addDragFunctionality(ion);
+                    
+                    this.beaker.appendChild(ion);
+                    
+                    // 반응 이온만 속도 설정
+                    const vx = (type === 'H' || type === 'OH') ? (Math.random() - 0.5) * 2 : 0;
+                    const vy = (type === 'H' || type === 'OH') ? (Math.random() - 0.5) * 2 : 0;
+                    
+                    this.ions.push({
+                        element: ion,
+                        type: type,
+                        vx: vx,
+                        vy: vy,
+                        baseX: x,  // 구경꾼 이온의 기본 위치
+                        baseY: y,
+                        isSpectator: ['Na', 'Cl', 'Ca', 'CO3'].includes(type)
+                    });
+                }
+            }
+            
+            updateIonDisplay(ion) {
+                const type = ion.dataset.type;
+                if (this.isShapeMode) {
+                    ion.textContent = this.ionShapes[type];
+                    ion.classList.add('shape-mode');
+                } else {
+                    ion.classList.remove('shape-mode');
+                    if (type === 'H') ion.textContent = 'H⁺';
+                    else if (type === 'OH') ion.textContent = 'OH⁻';
+                    else if (type === 'Na') ion.textContent = 'Na⁺';
+                    else if (type === 'Cl') ion.textContent = 'Cl⁻';
+                    else if (type === 'Ca') ion.textContent = 'Ca²⁺';
+                    else if (type === 'CO3') ion.textContent = 'CO₃²⁻';
+                }
+            }
+            
+            setDisplayMode(mode) {
+                this.isShapeMode = (mode === 'shape');
+                document.getElementById('ionModeBtn').classList.toggle('active', mode === 'ion');
+                document.getElementById('shapeModeBtn').classList.toggle('active', mode === 'shape');
+                
+                this.ions.forEach(ionObj => {
+                    this.updateIonDisplay(ionObj.element);
+                });
+            }
+            
+            toggleSpectatorIons() {
+                this.spectatorHidden = !this.spectatorHidden;
+                const btn = document.getElementById('toggleSpectatorBtn');
+                btn.textContent = this.spectatorHidden ? '구경꾼 이온 보이기' : '구경꾼 이온 숨기기';
+                
+                this.ions.forEach(ionObj => {
+                    if (ionObj.isSpectator) {
+                        ionObj.element.style.opacity = this.spectatorHidden ? '0.2' : '1';
+                    }
+                });
+            }
+            
+            toggleReactiveSize() {
+                this.reactiveEnlarged = !this.reactiveEnlarged;
+                const btn = document.getElementById('enlargeReactiveBtn');
+                btn.textContent = this.reactiveEnlarged ? '반응 이온 보통' : '반응 이온 크게';
+                
+                this.ions.forEach(ionObj => {
+                    if (!ionObj.isSpectator) {
+                        ionObj.element.style.transform = this.reactiveEnlarged ? 'scale(1.5)' : 'scale(1)';
+                    }
+                });
+            }
+            
+            addDragFunctionality(ion) {
+                let isDragging = false;
+                let startX, startY;
+                
+                ion.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    startX = e.clientX - ion.offsetLeft;
+                    startY = e.clientY - ion.offsetTop;
+                    ion.style.zIndex = 1000;
+                });
+                
+                document.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    
+                    const x = e.clientX - startX;
+                    const y = e.clientY - startY;
+                    
+                    const maxX = this.beaker.offsetWidth - ion.offsetWidth;
+                    const maxY = this.beaker.offsetHeight - ion.offsetHeight;
+                    
+                    ion.style.left = Math.max(0, Math.min(x, maxX)) + 'px';
+                    ion.style.top = Math.max(0, Math.min(y, maxY)) + 'px';
+                });
+                
+                document.addEventListener('mouseup', () => {
+                    isDragging = false;
+                    ion.style.zIndex = 1;
+                });
+            }
+            
+            moveIons() {
+                const hIons = this.ions.filter(ion => ion.type === 'H');
+                const ohIons = this.ions.filter(ion => ion.type === 'OH');
+                
+                this.ions.forEach(ionObj => {
+                    const ion = ionObj.element;
+                    let x = parseFloat(ion.style.left);
+                    let y = parseFloat(ion.style.top);
+                    
+                    if (ionObj.isSpectator) {
+                        // 구경꾼 이온은 제자리에서 떨림만
+                        x = ionObj.baseX + (Math.random() - 0.5) * 1;
+                        y = ionObj.baseY + (Math.random() - 0.5) * 1;
+                    } else if (ionObj.type === 'H') {
+                        // H+ 이온은 OH-에게 끌림
+                        ohIons.forEach(ohObj => {
+                            const ohX = parseFloat(ohObj.element.style.left);
+                            const ohY = parseFloat(ohObj.element.style.top);
+                            const dx = ohX - x;
+                            const dy = ohY - y;
+                            const distance = Math.sqrt(dx * dx + dy * dy);
+                            
+                            if (distance > 0) {
+                                const force = 500 / (distance + 50);
+                                ionObj.vx += force * dx / distance;
+                                ionObj.vy += force * dy / distance;
+                            }
+                        });
+                        
+                        // 속도 제한
+                        const maxSpeed = 9;
+                        const speed = Math.sqrt(ionObj.vx * ionObj.vx + ionObj.vy * ionObj.vy);
+                        if (speed > maxSpeed) {
+                            ionObj.vx = (ionObj.vx / speed) * maxSpeed;
+                            ionObj.vy = (ionObj.vy / speed) * maxSpeed;
+                        }
+                        
+                        x += ionObj.vx;
+                        y += ionObj.vy;
+                        ionObj.vx *= 0.95;
+                        ionObj.vy *= 0.95;
+                        
+                    } else if (ionObj.type === 'OH') {
+                        // OH- 이온은 H+에게 끌림
+                        hIons.forEach(hObj => {
+                            const hX = parseFloat(hObj.element.style.left);
+                            const hY = parseFloat(hObj.element.style.top);
+                            const dx = hX - x;
+                            const dy = hY - y;
+                            const distance = Math.sqrt(dx * dx + dy * dy);
+                            
+                            if (distance > 0) {
+                                const force = 500 / (distance + 50);
+                                ionObj.vx += force * dx / distance;
+                                ionObj.vy += force * dy / distance;
+                            }
+                        });
+                        
+                        const maxSpeed = 9;
+                        const speed = Math.sqrt(ionObj.vx * ionObj.vx + ionObj.vy * ionObj.vy);
+                        if (speed > maxSpeed) {
+                            ionObj.vx = (ionObj.vx / speed) * maxSpeed;
+                            ionObj.vy = (ionObj.vy / speed) * maxSpeed;
+                        }
+                        
+                        x += ionObj.vx;
+                        y += ionObj.vy;
+                        ionObj.vx *= 0.95;
+                        ionObj.vy *= 0.95;
+                    }
+                    
+                    // 경계 체크
+                    x = Math.max(0, Math.min(x, this.beaker.offsetWidth - ion.offsetWidth));
+                    y = Math.max(0, Math.min(y, this.beaker.offsetHeight - ion.offsetHeight));
+                    
+                    if (!ionObj.isSpectator) {
+                        if (x <= 0 || x >= this.beaker.offsetWidth - ion.offsetWidth) {
+                            ionObj.vx = -ionObj.vx * 0.8;
+                        }
+                        if (y <= 0 || y >= this.beaker.offsetHeight - ion.offsetHeight) {
+                            ionObj.vy = -ionObj.vy * 0.8;
+                        }
+                    }
+                    
+                    ion.style.left = x + 'px';
+                    ion.style.top = y + 'px';
+                });
+            }
+            
+            checkNeutralization() {
+                const hIons = this.ions.filter(ion => ion.type === 'H');
+                const ohIons = this.ions.filter(ion => ion.type === 'OH');
+                
+                for (let i = hIons.length - 1; i >= 0; i--) {
+                    for (let j = ohIons.length - 1; j >= 0; j--) {
+                        const h = hIons[i];
+                        const oh = ohIons[j];
+                        
+                        if (this.checkCollision(h.element, oh.element)) {
+                            this.createWaterAnimation(h.element, oh.element);
+                            
+                            h.element.remove();
+                            oh.element.remove();
+                            
+                            this.ions = this.ions.filter(ion => ion !== h && ion !== oh);
+                            hIons.splice(i, 1);
+                            ohIons.splice(j, 1);
+                            
+                            // 중화열 발생
+                            this.neutralizationCount++;
+                            this.temperature += 2;
+                            
+                            this.updateStats();
+                            break;
+                        }
+                    }
+                }
+                
+                // 온도 천천히 냉각
+                if (this.temperature > 25) {
+                    this.temperature -= 0.01;
+                }
+            }
+            
+            checkCollision(elem1, elem2) {
+                const rect1 = elem1.getBoundingClientRect();
+                const rect2 = elem2.getBoundingClientRect();
+                
+                return !(rect1.right < rect2.left || 
+                        rect1.left > rect2.right || 
+                        rect1.bottom < rect2.top || 
+                        rect1.top > rect2.bottom);
+            }
+            
+            createWaterAnimation(hElem, ohElem) {
+                const water = document.createElement('div');
+                water.style.position = 'absolute';
+                water.style.left = hElem.style.left;
+                water.style.top = hElem.style.top;
+                water.style.width = '60px';
+                water.style.height = '60px';
+                water.style.borderRadius = '50%';
+                water.style.background = 'radial-gradient(circle, rgba(0,150,255,0.3), rgba(0,100,200,0.1))';
+                water.style.display = 'flex';
+                water.style.alignItems = 'center';
+                water.style.justifyContent = 'center';
+                water.style.fontSize = '20px';
+                water.style.fontWeight = 'bold';
+                water.style.color = '#0066cc';
+                water.textContent = 'H₂O';
+                water.style.animation = 'fadeOut 2s forwards';
+                
+                this.beaker.appendChild(water);
+                setTimeout(() => water.remove(), 2000);
+            }
+            
+            startAnimation() {
+                const animate = () => {
+                    if (!this.isPaused) {
+                        this.moveIons();
+                        this.checkNeutralization();
+                        this.updateStats();
+                        this.updateIndicator();
+                    }
+                    requestAnimationFrame(animate);
+                };
+                animate();
+                
+                setInterval(() => {
+                    if (!this.isPaused) {
+                        this.updateGraph();
+                    }
+                }, 500);
+            }
+            
+            setupGraph() {
+                const canvas = document.getElementById('ionGraph');
+                this.ctx = canvas.getContext('2d');
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+                this.drawGraph();
+            }
+            
+            updateGraph() {
+                this.timeStep++;
+                this.graphData.time.push(this.timeStep);
+                
+                const counts = {
+                    H: 0, OH: 0, Na: 0, Cl: 0, Ca: 0, CO3: 0
+                };
+                
+                this.ions.forEach(ion => {
+                    counts[ion.type]++;
+                });
+                
+                Object.keys(counts).forEach(key => {
+                    this.graphData[key].push(counts[key]);
+                });
+                
+                const total = Object.values(counts).reduce((sum, count) => sum + count, 0);
+                this.graphData.total.push(total);
+                this.graphData.temperature.push(this.temperature);
+                
+                if (this.graphData.time.length > 50) {
+                    Object.keys(this.graphData).forEach(key => {
+                        this.graphData[key].shift();
+                    });
+                }
+                
+                this.drawGraph();
+            }
+            
+            drawGraph() {
+                const canvas = document.getElementById('ionGraph');
+                const ctx = this.ctx;
+                const width = canvas.width;
+                const height = canvas.height;
+                
+                ctx.clearRect(0, 0, width, height);
+                
+                ctx.strokeStyle = '#e0e0e0';
+                ctx.lineWidth = 1;
+                for (let i = 0; i <= 10; i++) {
+                    const y = (height / 10) * i;
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(width, y);
+                    ctx.stroke();
+                }
+                
+                if (this.graphData.time.length === 0) return;
+                
+                const maxValue = Math.max(...this.graphData.total, 10);
+                const xScale = width / Math.max(50, this.graphData.time.length);
+                const yScale = height / maxValue;
+                
+                const lineConfig = {
+                    H: { color: '#ff5252', offset: 0, dash: [] },
+                    OH: { color: '#339af0', offset: 2, dash: [] },
+                    Na: { color: '#6c5ce7', offset: -2, dash: [5, 3] },
+                    Cl: { color: '#0088ff', offset: 1, dash: [3, 3] },
+                    total: { color: '#333333', offset: 0, dash: [] }
+                };
+                
+                ['H', 'OH', 'Na', 'Cl', 'total'].forEach(key => {
+                    if (this.graphData[key].length === 0) return;
+                    
+                    const config = lineConfig[key];
+                    ctx.strokeStyle = config.color;
+                    ctx.lineWidth = key === 'total' ? 3 : 2;
+                    ctx.setLineDash(config.dash);
+                    ctx.beginPath();
+                    
+                    this.graphData[key].forEach((value, index) => {
+                        const x = index * xScale;
+                        const y = height - (value * yScale) + config.offset;
+                        
+                        if (index === 0) {
+                            ctx.moveTo(x, y);
+                        } else {
+                            ctx.lineTo(x, y);
+                        }
+                    });
+                    
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                });
+                
+                let legendY = 20;
+                const legendItems = [
+                    { key: 'H', label: 'H⁺', dash: [] },
+                    { key: 'OH', label: 'OH⁻', dash: [] },
+                    { key: 'Na', label: 'Na⁺', dash: [5, 3] },
+                    { key: 'Cl', label: 'Cl⁻', dash: [3, 3] },
+                    { key: 'total', label: '총 이온', dash: [] }
+                ];
+                
+                legendItems.forEach(item => {
+                    const config = lineConfig[item.key];
+                    ctx.strokeStyle = config.color;
+                    ctx.lineWidth = item.key === 'total' ? 3 : 2;
+                    ctx.setLineDash(item.dash);
+                    ctx.beginPath();
+                    ctx.moveTo(width - 80, legendY - 2);
+                    ctx.lineTo(width - 60, legendY - 2);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                    
+                    ctx.fillStyle = '#333';
+                    ctx.font = '10px sans-serif';
+                    ctx.fillText(item.label, width - 55, legendY);
+                    legendY += 15;
+                });
+            }
+            
+            updateStats() {
+                const counts = {
+                    H: 0, OH: 0, Na: 0, Cl: 0, Ca: 0, CO3: 0
+                };
+                
+                this.ions.forEach(ion => {
+                    if (counts.hasOwnProperty(ion.type)) {
+                        counts[ion.type]++;
+                    }
+                });
+                
+                document.getElementById('hCount').textContent = counts.H;
+                document.getElementById('ohCount').textContent = counts.OH;
+                document.getElementById('naCount').textContent = counts.Na;
+                document.getElementById('clCount').textContent = counts.Cl;
+                
+                const totalIons = this.ions.length;
+                document.getElementById('totalCount').textContent = totalIons;
+            }
+            
+            updateIndicator() {
+                const indicator = document.getElementById('indicatorSelect').value;
+                const display = document.getElementById('indicatorDisplay');
+                
+                const hCount = this.ions.filter(ion => ion.type === 'H').length;
+                const ohCount = this.ions.filter(ion => ion.type === 'OH').length;
+                
+                let phClass = 'ph-neutral';
+                let phText = '중성';
+                
+                if (hCount > ohCount) {
+                    phClass = 'ph-acidic';
+                    phText = '산성';
+                } else if (ohCount > hCount) {
+                    phClass = 'ph-basic';
+                    phText = '염기성';
+                }
+                
+                display.className = 'indicator-display';
+                
+                if (indicator === 'none') {
+                    display.innerHTML = `
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 20px;">
+                            <div>
+                                <div style="font-size: 24px;">🌡️</div>
+                                <div style="font-size: 18px; font-weight: bold; color: ${this.temperature > 30 ? '#ff5252' : '#333'};">
+                                    ${this.temperature.toFixed(1)}°C
+                                </div>
+                                <div style="font-size: 12px; color: #666;">
+                                    중화 반응: ${this.neutralizationCount}회
+                                </div>
+                            </div>
+                            <canvas id="tempGraph" width="200" height="80" style="border: 1px solid #ddd; border-radius: 5px;"></canvas>
+                        </div>
+                    `;
+                    display.style.background = this.temperature > 30 ? '#ffe0e0' : '#f8f9fa';
+                    display.style.color = '#333';
+                    
+                    this.drawTemperatureGraph();
+                    
+                } else if (indicator === 'btb') {
+                    display.classList.add(phClass);
+                    const colors = {
+                        'ph-acidic': '노란색',
+                        'ph-neutral': '초록색',
+                        'ph-basic': '파란색'
+                    };
+                    display.textContent = `BTB: ${colors[phClass]} (${phText})`;
+                } else if (indicator === 'phenol') {
+                    if (phClass === 'ph-basic') {
+                        display.style.background = '#ff69b4';
+                        display.style.color = 'white';
+                        display.textContent = '페놀프탈레인: 분홍색 (염기성)';
+                    } else {
+                        display.style.background = '#f8f9fa';
+                        display.style.color = '#666';
+                        display.textContent = '페놀프탈레인: 무색 (산성/중성)';
+                    }
+                } else if (indicator === 'methyl') {
+                    if (phClass === 'ph-acidic') {
+                        display.style.background = '#ff6b6b';
+                        display.style.color = 'white';
+                        display.textContent = '메틸오렌지: 빨간색 (산성)';
+                    } else {
+                        display.style.background = '#ffd43b';
+                        display.style.color = '#333';
+                        display.textContent = '메틸오렌지: 노란색 (중성/염기성)';
+                    }
+                }
+            }
+            
+            drawTemperatureGraph() {
+                const canvas = document.getElementById('tempGraph');
+                if (!canvas) return;
+                
+                const ctx = canvas.getContext('2d');
+                const width = canvas.width;
+                const height = canvas.height;
+                
+                ctx.clearRect(0, 0, width, height);
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0, 0, width, height);
+                
+                if (this.graphData.temperature.length > 0) {
+                    const data = this.graphData.temperature.slice(-30);
+                    const maxTemp = Math.max(...data, 40);
+                    const minTemp = 20;
+                    
+                    ctx.strokeStyle = '#ff5252';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    
+                    data.forEach((temp, index) => {
+                        const x = (index / (data.length - 1)) * (width - 10) + 5;
+                        const y = height - ((temp - minTemp) / (maxTemp - minTemp)) * (height - 10) - 5;
+                        
+                        if (index === 0) {
+                            ctx.moveTo(x, y);
+                        } else {
+                            ctx.lineTo(x, y);
+                        }
+                    });
+                    
+                    ctx.stroke();
+                    
+                    if (data.length > 0) {
+                        const lastTemp = data[data.length - 1];
+                        const lastX = width - 5;
+                        const lastY = height - ((lastTemp - minTemp) / (maxTemp - minTemp)) * (height - 10) - 5;
+                        
+                        ctx.fillStyle = '#ff5252';
+                        ctx.beginPath();
+                        ctx.arc(lastX, lastY, 3, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+            }
+            
+            togglePause() {
+                this.isPaused = !this.isPaused;
+                const btn = document.getElementById('pauseBtn');
+                btn.textContent = this.isPaused ? '재생' : '일시정지';
+            }
+            
+            reset() {
+                this.ions.forEach(ion => ion.element.remove());
+                this.ions = [];
+                
+                this.temperature = 25;
+                this.neutralizationCount = 0;
+                
+                this.graphData = {
+                    time: [],
+                    H: [],
+                    OH: [],
+                    Na: [],
+                    Cl: [],
+                    Ca: [],
+                    CO3: [],
+                    total: [],
+                    temperature: []
+                };
+                this.timeStep = 0;
+                
+                this.updateStats();
+                this.drawGraph();
+                this.updateIndicator();
+            }
+        }
+        
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeOut {
+                0% {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+                50% {
+                    transform: scale(1.2);
+                }
+                100% {
+                    opacity: 0;
+                    transform: scale(0.8);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        const sim = new NeutralizationSimulation();
+    </script>
+</body>
+</html>
