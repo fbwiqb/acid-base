@@ -206,6 +206,45 @@
             background: #f8f9fa;
             border-radius: 5px;
         }
+
+/* 기존 .ion 클래스는 그대로 두고, 도형 모드용 클래스 추가 */
+.ion.shape-mode {
+    font-size: 24px;  /* 이 줄 제거 */
+    background: none !important;  /* 배경 제거 */
+    box-shadow: none !important;  /* 그림자 제거 */
+}
+
+.ion.shape-mode.H {
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 35px solid #ff5252;
+    border-radius: 0;
+}
+
+.ion.shape-mode.OH {
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 35px solid #339af0;
+    border-radius: 0;
+}
+
+.ion.shape-mode.Na {
+    width: 40px;
+    height: 40px;
+    background: #6c5ce7 !important;
+    border-radius: 0;
+}
+
+.ion.shape-mode.Cl {
+    width: 40px;
+    height: 40px;
+    background: #0088ff !important;
+    border-radius: 50%;
+}
         
         .stat-label {
             font-weight: 500;
@@ -395,14 +434,7 @@
                 this.additionCount = 0;
                 this.timeStep = 0;
                 
-                this.ionShapes = {
-                    H: '●',
-                    OH: '▲',
-                    Na: '■',
-                    Cl: '◆',
-                    Ca: '★',
-                    CO3: '⬟'
-                };
+        
                 
                 this.init();
             }
@@ -500,21 +532,21 @@
                 }
             }
             
-            updateIonDisplay(ion) {
-                const type = ion.dataset.type;
-                if (this.isShapeMode) {
-                    ion.textContent = this.ionShapes[type];
-                    ion.classList.add('shape-mode');
-                } else {
-                    ion.classList.remove('shape-mode');
-                    if (type === 'H') ion.textContent = 'H⁺';
-                    else if (type === 'OH') ion.textContent = 'OH⁻';
-                    else if (type === 'Na') ion.textContent = 'Na⁺';
-                    else if (type === 'Cl') ion.textContent = 'Cl⁻';
-                    else if (type === 'Ca') ion.textContent = 'Ca²⁺';
-                    else if (type === 'CO3') ion.textContent = 'CO₃²⁻';
-                }
-            }
+           updateIonDisplay(ion) {
+    const type = ion.dataset.type;
+    if (this.isShapeMode) {
+        ion.textContent = '';  // 텍스트 비우기
+        ion.classList.add('shape-mode');
+    } else {
+        ion.classList.remove('shape-mode');
+        if (type === 'H') ion.textContent = 'H⁺';
+        else if (type === 'OH') ion.textContent = 'OH⁻';
+        else if (type === 'Na') ion.textContent = 'Na⁺';
+        else if (type === 'Cl') ion.textContent = 'Cl⁻';
+        else if (type === 'Ca') ion.textContent = 'Ca²⁺';
+        else if (type === 'CO3') ion.textContent = 'CO₃²⁻';
+    }
+}
             
             setDisplayMode(mode) {
                 this.isShapeMode = (mode === 'shape');
@@ -809,9 +841,12 @@
                 
                 if (this.graphData.additions.length === 0) return;
                 
-                const maxValue = Math.max(...this.graphData.total, 10);
-                const xScale = width / Math.max(50, this.graphData.additions.length);
-                const yScale = height / maxValue;
+const maxValue = Math.max(...this.graphData.total, 10);
+// x축 스케일을 항상 전체 너비에 맞추도록 수정
+const xScale = this.graphData.additions.length > 1 
+    ? width / (this.graphData.additions.length - 1) 
+    : width;
+const yScale = height / maxValue;
                 
                 const lineConfig = {
                     H: { color: '#ff5252', offset: 0, dash: [] },
