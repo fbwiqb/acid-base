@@ -219,12 +219,20 @@
 }
 
 .ion.shape-mode.OH {
-    width: 0;
-    height: 0;
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
-    border-bottom: 35px solid #339af0;
-    border-radius: 0;
+    width: 40px;
+    height: 40px;
+    background: none !important;
+    position: relative;
+}
+
+.ion.shape-mode.OH::before {
+    content: '★';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 35px;
+    color: #339af0;
 }
 
 .ion.shape-mode.Na {
