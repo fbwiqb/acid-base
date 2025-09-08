@@ -1014,10 +1014,12 @@
     display.innerHTML = `
         <div style="display: flex; flex-direction: column; align-items: center;">
             <div class="water-molecules" id="waterMoleculeDisplay" style="min-height: 40px;">
-                ${Array(this.waterMoleculeCount).fill(0).map((_, index) => 
-                    `<div class="water-molecule-icon" style="animation-delay: ${index * 0.1}s">H₂O</div>`
-                ).join('')}
-            </div>
+    ${this.waterMoleculeCount > 0 ? 
+        Array.from({length: this.waterMoleculeCount}, (_, index) => 
+            `<div class="water-molecule-icon" style="animation-delay: ${index * 0.1}s">H₂O</div>`
+        ).join('') : ''
+    }
+</div>
             <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-top: 10px;">
                 <div>
                     <div style="font-size: 24px;">🌡️</div>
