@@ -622,11 +622,41 @@
                 });
             }
             
-            togglePersistWater() {
-                this.persistWater = !this.persistWater;
-                const btn = document.getElementById('persistWaterBtn');
-                btn.textContent = this.persistWater ? '물분자 사라지기' : '물분자 사라지지 않기';
-            }
+          togglePersistWater() {
+    this.persistWater = !this.persistWater;
+    const btn = document.getElementById('persistWaterBtn');
+    btn.textContent = this.persistWater ? '물분자 사라지기' : '물분자 사라지지 않기';
+    
+    // 기존 물분자들에 소급 적용
+    this.waterAnimations.forEach(water => {
+        if (this.persistWater) {
+            // 사라지지 않기 모드: 애니메이션 중지하고 보이게
+            water.classList.add('persist');
+            water.style.animation = 'none';
+            water.style.opacity = '1';
+            water.style.display = 'flex';
+        } else {
+            // 사라지기 모드: 모든 기존 물분자 제거 시작
+            water.classList.remove('persist');
+            water.style.animation = 'fadeOut 2s forwards';
+            setTimeout(() => {
+                water.remove();
+                // 배열에서도 제거
+                const index = this.waterAnimations.indexOf(water);
+                if (index > -1) {
+                    this.waterAnimations.splice(index, 1);
+                }
+            }, 2000);
+        }
+    });
+    
+    // 사라지기 모드로 전환시 배열 비우기 (2초 후)
+    if (!this.persistWater) {
+        setTimeout(() => {
+            this.waterAnimations = [];
+        }, 2000);
+    }
+}
             
             addDragFunctionality(ion) {
                 let isDragging = false;
