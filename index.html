@@ -112,13 +112,38 @@
         #beaker {
             width: 100%;
             height: 400px;
-            background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(200,230,255,0.3) 100%);
+            background: linear-gradient(to bottom, 
+                rgba(255,255,255,0) 0%, 
+                rgba(255,255,255,0) 70%,
+                rgba(200,230,255,0.2) 70%,
+                rgba(200,230,255,0.4) 100%);
             border: 3px solid #333;
             border-top: none;
             border-radius: 0 0 50px 50px;
             position: relative;
             overflow: hidden;
             margin-top: 20px;
+        }
+        
+        #beaker::before {
+            content: '';
+            position: absolute;
+            top: 70%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(to right, 
+                transparent 0%, 
+                rgba(100,150,200,0.5) 20%, 
+                rgba(100,150,200,0.5) 80%, 
+                transparent 100%);
+            animation: wave 3s linear infinite;
+        }
+        
+        @keyframes wave {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(-10px) translateY(-1px); }
+            75% { transform: translateX(10px) translateY(-1px); }
         }
         
         .ion {
@@ -161,16 +186,6 @@
             color: white;
         }
         
-        .ion.Ca {
-            background: radial-gradient(circle, #ffa94d, #fd7e14);
-            color: white;
-        }
-        
-        .ion.CO3 {
-            background: radial-gradient(circle, #69db7c, #51cf66);
-            color: white;
-        }
-        
         .graph-container {
             background: #f8f9fa;
             padding: 20px;
@@ -203,66 +218,51 @@
             border-radius: 5px;
         }
 
-/* 기존 .ion 클래스는 그대로 두고, 도형 모드용 클래스 추가 */
-.ion.shape-mode {
-    background: none !important;  /* 배경 제거 */
-    box-shadow: none !important;  /* 그림자 제거 */
-}
+        .ion.shape-mode {
+            background: none !important;
+            box-shadow: none !important;
+        }
 
-.ion.shape-mode.H {
-    width: 0;
-    height: 0;
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
-    border-bottom: 35px solid #ff5252;
-    border-radius: 0;
-}
+        .ion.shape-mode.H {
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 35px solid #ff5252;
+            border-radius: 0;
+        }
 
-.ion.shape-mode.OH {
-    width: 40px;
-    height: 40px;
-    background: none !important;
-    position: relative;
-}
+        .ion.shape-mode.OH {
+            width: 40px;
+            height: 40px;
+            background: none !important;
+            position: relative;
+        }
 
-.ion.shape-mode.OH::before {
-    content: '★';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 35px;
-    color: #339af0;
-}
+        .ion.shape-mode.OH::before {
+            content: '★';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 35px;
+            color: #339af0;
+        }
 
-.ion.shape-mode.Na {
-    width: 40px;
-    height: 40px;
-    background: #6c5ce7 !important;
-    border-radius: 0;
-}
+        .ion.shape-mode.Na {
+            width: 40px;
+            height: 40px;
+            background: #6c5ce7 !important;
+            border-radius: 0;
+        }
 
-.ion.shape-mode.Cl {
-    width: 40px;
-    height: 40px;
-    background: #0088ff !important;
-    border-radius: 50%;
-}
+        .ion.shape-mode.Cl {
+            width: 40px;
+            height: 40px;
+            background: #0088ff !important;
+            border-radius: 50%;
+        }
 
-        .ion.shape-mode.Ca {
-    width: 40px;
-    height: 40px;
-    background: #fd7e14 !important;
-    border-radius: 0;
-    transform: rotate(45deg);  /* 다이아몬드 모양 */
-}
-
-.ion.shape-mode.CO3 {
-    width: 40px;
-    height: 40px;
-    background: #51cf66 !important;
-    border-radius: 0;
-}
         .stat-label {
             font-weight: 500;
             color: #666;
@@ -330,6 +330,55 @@
         .dropper:active {
             transform: scale(0.95);
         }
+        
+        .water-molecules {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+            min-height: 30px;
+            padding: 5px;
+            background: rgba(200,230,255,0.1);
+            border-radius: 5px;
+        }
+        
+        .water-molecule-icon {
+            width: 25px;
+            height: 25px;
+            background: radial-gradient(circle, rgba(0,150,255,0.6), rgba(0,100,200,0.3));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: white;
+            font-weight: bold;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .water-animation {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,150,255,0.3), rgba(0,100,200,0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #0066cc;
+        }
+        
+        .water-animation.persist {
+            animation: none !important;
+            opacity: 1 !important;
+        }
     </style>
 </head>
 <body>
@@ -340,20 +389,12 @@
             <!-- 컨트롤 패널 -->
             <div class="control-panel">
                 <div class="control-section">
-                    <h3>⚗️ 용액 선택</h3>
+                    <h3>⚗️ 용액 정보</h3>
                     <div class="control-group">
-                        <label>산성 용액:</label>
-                        <select id="acidSelect">
-                            <option value="HCl">염산 (HCl)</option>
-                            <option value="H2CO3">탄산 (H₂CO₃)</option>
-                        </select>
+                        <label>산성 용액: 염산 (HCl)</label>
                     </div>
                     <div class="control-group">
-                        <label>염기성 용액:</label>
-                        <select id="baseSelect">
-                            <option value="NaOH">수산화나트륨 (NaOH)</option>
-                            <option value="Ca(OH)2">수산화칼슘 (Ca(OH)₂)</option>
-                        </select>
+                        <label>염기성 용액: 수산화 나트륨 (NaOH)</label>
                     </div>
                 </div>
                 
@@ -363,7 +404,6 @@
                         <option value="none">없음 (온도 측정)</option>
                         <option value="btb">BTB 용액</option>
                         <option value="phenol">페놀프탈레인</option>
-                        <option value="methyl">메틸오렌지</option>
                     </select>
                 </div>
                 
@@ -373,16 +413,15 @@
                         <button class="toggle-btn active" id="ionModeBtn">이온식</button>
                         <button class="toggle-btn" id="shapeModeBtn">도형</button>
                     </div>
-                    <button id="toggleSpectatorBtn">구경꾼 이온 숨기기</button>
-                    <button id="enlargeReactiveBtn">반응 이온 크게</button>
+                    <button id="toggleSpectatorBtn">반응하지 않는 이온 숨기기</button>
+                    <button id="persistWaterBtn">물분자 사라지지 않기</button>
                 </div>
                 
                 <div class="control-section">
                     <h3>🔄 컨트롤</h3>
                     <button id="resetBtn">초기화</button>
                     <button id="pauseBtn">일시정지</button>
-                    <button id="resetGraphBtn">그래프 초기화</button>  <!-- 이 줄 추가 -->
-
+                    <button id="resetGraphBtn">그래프 초기화</button>
                 </div>
             </div>
             
@@ -400,7 +439,7 @@
             
             <!-- 그래프 영역 -->
             <div class="graph-container">
-                <h3>📊 이온 농도 변화</h3>
+                <h3>📊 이온 수 변화 (상대값)</h3>
                 <canvas id="ionGraph"></canvas>
                 
                 <div class="stats">
@@ -424,6 +463,10 @@
                         <span class="stat-label">총 이온 수:</span>
                         <span class="stat-value" id="totalCount">0</span>
                     </div>
+                    <div class="stat-item">
+                        <span class="stat-label">생성된 물분자:</span>
+                        <span class="stat-value" id="waterCount">0</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -436,24 +479,22 @@
                 this.isPaused = false;
                 this.isShapeMode = false;
                 this.spectatorHidden = false;
-                this.reactiveEnlarged = false;
-                this.temperature = 25; // 초기 온도
+                this.persistWater = false;
+                this.temperature = 25;
                 this.neutralizationCount = 0;
+                this.waterMoleculeCount = 0;
+                this.waterAnimations = [];
                 this.graphData = {
                     additions: [],
                     H: [],
                     OH: [],
                     Na: [],
                     Cl: [],
-                    Ca: [],
-                    CO3: [],
                     total: [],
                     temperature: []
                 };
                 this.additionCount = 0;
                 this.timeStep = 0;
-                
-        
                 
                 this.init();
             }
@@ -471,66 +512,48 @@
                 document.getElementById('ionModeBtn').addEventListener('click', () => this.setDisplayMode('ion'));
                 document.getElementById('shapeModeBtn').addEventListener('click', () => this.setDisplayMode('shape'));
                 document.getElementById('toggleSpectatorBtn').addEventListener('click', () => this.toggleSpectatorIons());
-                document.getElementById('enlargeReactiveBtn').addEventListener('click', () => this.toggleReactiveSize());
+                document.getElementById('persistWaterBtn').addEventListener('click', () => this.togglePersistWater());
                 document.getElementById('resetBtn').addEventListener('click', () => this.reset());
                 document.getElementById('pauseBtn').addEventListener('click', () => this.togglePause());
                 document.getElementById('indicatorSelect').addEventListener('change', () => this.updateIndicator());
                 document.getElementById('resetGraphBtn').addEventListener('click', () => this.resetGraph());
-
-
             }
             
-    addAcid() {
-    // 이미 첨가 중이면 무시
-    if (this.isAddingIons) return;
-    
-    const acidType = document.getElementById('acidSelect').value;
-    
-    this.isAddingIons = true;  // 첨가 시작
-    this.additionCount++;
-    
-    if (acidType === 'HCl') {
-        this.addIon('H', 1);
-        this.addIon('Cl', 1);
-    } else if (acidType === 'H2CO3') {
-        this.addIon('H', 2);
-        this.addIon('CO3', 1);
-    }
-    
-    // 반응이 완료될 때까지 대기 후 그래프 업데이트
-    setTimeout(() => {
-        this.updateStats();
-        this.updateGraph();
-        this.updateIndicator();
-        this.isAddingIons = false;  // 첨가 완료
-    }, 1500);
-}
+            addAcid() {
+                if (this.isAddingIons) return;
+                
+                this.isAddingIons = true;
+                this.additionCount++;
+                
+                // 염산 (HCl)만 추가
+                this.addIon('H', 1);
+                this.addIon('Cl', 1);
+                
+                setTimeout(() => {
+                    this.updateStats();
+                    this.updateGraph();
+                    this.updateIndicator();
+                    this.isAddingIons = false;
+                }, 1500);
+            }
             
-addBase() {
-    // 이미 첨가 중이면 무시
-    if (this.isAddingIons) return;
-    
-    const baseType = document.getElementById('baseSelect').value;
-    
-    this.isAddingIons = true;  // 첨가 시작
-    this.additionCount++;
-    
-    if (baseType === 'NaOH') {
-        this.addIon('Na', 1);
-        this.addIon('OH', 1);
-    } else if (baseType === 'Ca(OH)2') {
-        this.addIon('Ca', 1);
-        this.addIon('OH', 2);
-    }
-    
-    // 반응이 완료될 때까지 대기 후 그래프 업데이트
-    setTimeout(() => {
-        this.updateStats();
-        this.updateGraph();
-        this.updateIndicator();
-        this.isAddingIons = false;  // 첨가 완료
-    }, 1500);
-}
+            addBase() {
+                if (this.isAddingIons) return;
+                
+                this.isAddingIons = true;
+                this.additionCount++;
+                
+                // 수산화 나트륨 (NaOH)만 추가
+                this.addIon('Na', 1);
+                this.addIon('OH', 1);
+                
+                setTimeout(() => {
+                    this.updateStats();
+                    this.updateGraph();
+                    this.updateIndicator();
+                    this.isAddingIons = false;
+                }, 1500);
+            }
             
             addIon(type, count = 1) {
                 for (let i = 0; i < count; i++) {
@@ -548,7 +571,6 @@ addBase() {
                     
                     this.beaker.appendChild(ion);
                     
-                    // 반응 이온만 속도 설정
                     const vx = (type === 'H' || type === 'OH') ? (Math.random() - 0.5) * 2 : 0;
                     const vy = (type === 'H' || type === 'OH') ? (Math.random() - 0.5) * 2 : 0;
                     
@@ -557,28 +579,26 @@ addBase() {
                         type: type,
                         vx: vx,
                         vy: vy,
-                        baseX: x,  // 구경꾼 이온의 기본 위치
+                        baseX: x,
                         baseY: y,
-                        isSpectator: ['Na', 'Cl', 'Ca', 'CO3'].includes(type)
+                        isSpectator: ['Na', 'Cl'].includes(type)
                     });
                 }
             }
             
-           updateIonDisplay(ion) {
-    const type = ion.dataset.type;
-    if (this.isShapeMode) {
-        ion.textContent = '';  // 텍스트 비우기
-        ion.classList.add('shape-mode');
-    } else {
-        ion.classList.remove('shape-mode');
-        if (type === 'H') ion.textContent = 'H⁺';
-        else if (type === 'OH') ion.textContent = 'OH⁻';
-        else if (type === 'Na') ion.textContent = 'Na⁺';
-        else if (type === 'Cl') ion.textContent = 'Cl⁻';
-        else if (type === 'Ca') ion.textContent = 'Ca²⁺';
-        else if (type === 'CO3') ion.textContent = 'CO₃²⁻';
-    }
-}
+            updateIonDisplay(ion) {
+                const type = ion.dataset.type;
+                if (this.isShapeMode) {
+                    ion.textContent = '';
+                    ion.classList.add('shape-mode');
+                } else {
+                    ion.classList.remove('shape-mode');
+                    if (type === 'H') ion.textContent = 'H⁺';
+                    else if (type === 'OH') ion.textContent = 'OH⁻';
+                    else if (type === 'Na') ion.textContent = 'Na⁺';
+                    else if (type === 'Cl') ion.textContent = 'Cl⁻';
+                }
+            }
             
             setDisplayMode(mode) {
                 this.isShapeMode = (mode === 'shape');
@@ -593,7 +613,7 @@ addBase() {
             toggleSpectatorIons() {
                 this.spectatorHidden = !this.spectatorHidden;
                 const btn = document.getElementById('toggleSpectatorBtn');
-                btn.textContent = this.spectatorHidden ? '구경꾼 이온 보이기' : '구경꾼 이온 숨기기';
+                btn.textContent = this.spectatorHidden ? '반응하지 않는 이온 보이기' : '반응하지 않는 이온 숨기기';
                 
                 this.ions.forEach(ionObj => {
                     if (ionObj.isSpectator) {
@@ -602,16 +622,10 @@ addBase() {
                 });
             }
             
-            toggleReactiveSize() {
-                this.reactiveEnlarged = !this.reactiveEnlarged;
-                const btn = document.getElementById('enlargeReactiveBtn');
-                btn.textContent = this.reactiveEnlarged ? '반응 이온 보통' : '반응 이온 크게';
-                
-                this.ions.forEach(ionObj => {
-                    if (!ionObj.isSpectator) {
-                        ionObj.element.style.transform = this.reactiveEnlarged ? 'scale(1.5)' : 'scale(1)';
-                    }
-                });
+            togglePersistWater() {
+                this.persistWater = !this.persistWater;
+                const btn = document.getElementById('persistWaterBtn');
+                btn.textContent = this.persistWater ? '물분자 사라지기' : '물분자 사라지지 않기';
             }
             
             addDragFunctionality(ion) {
@@ -654,11 +668,9 @@ addBase() {
                     let y = parseFloat(ion.style.top);
                     
                     if (ionObj.isSpectator) {
-                        // 구경꾼 이온은 제자리에서 떨림만
                         x = ionObj.baseX + (Math.random() - 0.5) * 1;
                         y = ionObj.baseY + (Math.random() - 0.5) * 1;
                     } else if (ionObj.type === 'H') {
-                        // H+ 이온은 OH-에게 끌림
                         ohIons.forEach(ohObj => {
                             const ohX = parseFloat(ohObj.element.style.left);
                             const ohY = parseFloat(ohObj.element.style.top);
@@ -673,7 +685,6 @@ addBase() {
                             }
                         });
                         
-                        // 속도 제한
                         const maxSpeed = 3;
                         const speed = Math.sqrt(ionObj.vx * ionObj.vx + ionObj.vy * ionObj.vy);
                         if (speed > maxSpeed) {
@@ -687,7 +698,6 @@ addBase() {
                         ionObj.vy *= 0.95;
                         
                     } else if (ionObj.type === 'OH') {
-                        // OH- 이온은 H+에게 끌림
                         hIons.forEach(hObj => {
                             const hX = parseFloat(hObj.element.style.left);
                             const hY = parseFloat(hObj.element.style.top);
@@ -715,7 +725,6 @@ addBase() {
                         ionObj.vy *= 0.95;
                     }
                     
-                    // 경계 체크
                     x = Math.max(0, Math.min(x, this.beaker.offsetWidth - ion.offsetWidth));
                     y = Math.max(0, Math.min(y, this.beaker.offsetHeight - ion.offsetHeight));
                     
@@ -752,8 +761,8 @@ addBase() {
                             hIons.splice(i, 1);
                             ohIons.splice(j, 1);
                             
-                            // 중화열 발생
                             this.neutralizationCount++;
+                            this.waterMoleculeCount++;
                             this.temperature += 2;
                             
                             this.updateStats();
@@ -762,7 +771,6 @@ addBase() {
                     }
                 }
                 
-                // 온도 천천히 냉각
                 if (this.temperature > 25) {
                     this.temperature -= 0.01;
                 }
@@ -780,24 +788,20 @@ addBase() {
             
             createWaterAnimation(hElem, ohElem) {
                 const water = document.createElement('div');
-                water.style.position = 'absolute';
+                water.className = 'water-animation';
                 water.style.left = hElem.style.left;
                 water.style.top = hElem.style.top;
-                water.style.width = '60px';
-                water.style.height = '60px';
-                water.style.borderRadius = '50%';
-                water.style.background = 'radial-gradient(circle, rgba(0,150,255,0.3), rgba(0,100,200,0.1))';
-                water.style.display = 'flex';
-                water.style.alignItems = 'center';
-                water.style.justifyContent = 'center';
-                water.style.fontSize = '20px';
-                water.style.fontWeight = 'bold';
-                water.style.color = '#0066cc';
                 water.textContent = 'H₂O';
-                water.style.animation = 'fadeOut 2s forwards';
+                
+                if (this.persistWater) {
+                    water.classList.add('persist');
+                    this.waterAnimations.push(water);
+                } else {
+                    water.style.animation = 'fadeOut 2s forwards';
+                    setTimeout(() => water.remove(), 2000);
+                }
                 
                 this.beaker.appendChild(water);
-                setTimeout(() => water.remove(), 2000);
             }
             
             startAnimation() {
@@ -811,8 +815,6 @@ addBase() {
                     requestAnimationFrame(animate);
                 };
                 animate();
-                
-        
             }
             
             setupGraph() {
@@ -823,17 +825,15 @@ addBase() {
                 this.drawGraph();
             }
             
-                        updateGraph() {
-                // 첨가 시에만 그래프 업데이트 (실시간 X)
+            updateGraph() {
                 const counts = {
-                    H: 0, OH: 0, Na: 0, Cl: 0, Ca: 0, CO3: 0
+                    H: 0, OH: 0, Na: 0, Cl: 0
                 };
                 
                 this.ions.forEach(ion => {
                     counts[ion.type]++;
                 });
                 
-                // 데이터 추가
                 this.graphData.additions.push(this.additionCount);
                 Object.keys(counts).forEach(key => {
                     this.graphData[key].push(counts[key]);
@@ -843,7 +843,6 @@ addBase() {
                 this.graphData.total.push(total);
                 this.graphData.temperature.push(this.temperature);
                 
-                // 최대 50개 데이터만 유지
                 if (this.graphData.additions.length > 50) {
                     Object.keys(this.graphData).forEach(key => {
                         this.graphData[key].shift();
@@ -873,19 +872,17 @@ addBase() {
                 
                 if (this.graphData.additions.length === 0) return;
                 
-const maxValue = Math.max(...this.graphData.total, 10);
-// x축 스케일을 항상 전체 너비에 맞추도록 수정
-const xScale = this.graphData.additions.length > 1 
-    ? width / (this.graphData.additions.length - 1) 
-    : width;
-const yScale = height / maxValue;
+                const maxValue = Math.max(...this.graphData.total, 10);
+                const xScale = this.graphData.additions.length > 1 
+                    ? width / (this.graphData.additions.length - 1) 
+                    : width;
+                const yScale = height / maxValue;
                 
                 const lineConfig = {
                     H: { color: '#ff5252', offset: 0, dash: [] },
                     OH: { color: '#339af0', offset: 2, dash: [] },
                     Na: { color: '#6c5ce7', offset: -2, dash: [5, 3] },
-                    Cl: { color: '#0088ff', offset: 1, dash: [3, 3] },
-                    total: { color: '#333333', offset: 0, dash: [] }
+                    Cl: { color: '#0088ff', offset: 1, dash: [3, 3] }
                 };
                 
                 ['H', 'OH', 'Na', 'Cl'].forEach(key => {
@@ -893,7 +890,7 @@ const yScale = height / maxValue;
                     
                     const config = lineConfig[key];
                     ctx.strokeStyle = config.color;
-                    ctx.lineWidth = key === 'total' ? 3 : 2;
+                    ctx.lineWidth = 2;
                     ctx.setLineDash(config.dash);
                     ctx.beginPath();
                     
@@ -917,13 +914,13 @@ const yScale = height / maxValue;
                     { key: 'H', label: 'H⁺', dash: [] },
                     { key: 'OH', label: 'OH⁻', dash: [] },
                     { key: 'Na', label: 'Na⁺', dash: [5, 3] },
-                    { key: 'Cl', label: 'Cl⁻', dash: [3, 3] },
+                    { key: 'Cl', label: 'Cl⁻', dash: [3, 3] }
                 ];
                 
                 legendItems.forEach(item => {
                     const config = lineConfig[item.key];
                     ctx.strokeStyle = config.color;
-                    ctx.lineWidth = item.key === 'total' ? 3 : 2;
+                    ctx.lineWidth = 2;
                     ctx.setLineDash(item.dash);
                     ctx.beginPath();
                     ctx.moveTo(width - 80, legendY - 2);
@@ -940,7 +937,7 @@ const yScale = height / maxValue;
             
             updateStats() {
                 const counts = {
-                    H: 0, OH: 0, Na: 0, Cl: 0, Ca: 0, CO3: 0
+                    H: 0, OH: 0, Na: 0, Cl: 0
                 };
                 
                 this.ions.forEach(ion => {
@@ -956,6 +953,7 @@ const yScale = height / maxValue;
                 
                 const totalIons = this.ions.length;
                 document.getElementById('totalCount').textContent = totalIons;
+                document.getElementById('waterCount').textContent = this.waterMoleculeCount;
             }
             
             updateIndicator() {
@@ -980,17 +978,24 @@ const yScale = height / maxValue;
                 
                 if (indicator === 'none') {
                     display.innerHTML = `
-                        <div style="display: flex; align-items: center; justify-content: center; gap: 20px;">
-                            <div>
-                                <div style="font-size: 24px;">🌡️</div>
-                                <div style="font-size: 18px; font-weight: bold; color: ${this.temperature > 30 ? '#ff5252' : '#333'};">
-                                    ${this.temperature.toFixed(1)}°C
-                                </div>
-                                <div style="font-size: 12px; color: #666;">
-                                    중화 반응: ${this.neutralizationCount}회
-                                </div>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <div class="water-molecules" id="waterMoleculeDisplay">
+                                ${Array(this.waterMoleculeCount).fill(0).map(() => 
+                                    '<div class="water-molecule-icon">H₂O</div>'
+                                ).join('')}
                             </div>
-                            <canvas id="tempGraph" width="200" height="80" style="border: 1px solid #ddd; border-radius: 5px;"></canvas>
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-top: 10px;">
+                                <div>
+                                    <div style="font-size: 24px;">🌡️</div>
+                                    <div style="font-size: 18px; font-weight: bold; color: ${this.temperature > 30 ? '#ff5252' : '#333'};">
+                                        ${this.temperature.toFixed(1)}°C
+                                    </div>
+                                    <div style="font-size: 12px; color: #666;">
+                                        중화 반응: ${this.neutralizationCount}회
+                                    </div>
+                                </div>
+                                <canvas id="tempGraph" width="200" height="80" style="border: 1px solid #ddd; border-radius: 5px;"></canvas>
+                            </div>
                         </div>
                     `;
                     display.style.background = this.temperature > 30 ? '#ffe0e0' : '#f8f9fa';
@@ -1015,16 +1020,6 @@ const yScale = height / maxValue;
                         display.style.background = '#f8f9fa';
                         display.style.color = '#666';
                         display.textContent = '페놀프탈레인: 무색 (산성/중성)';
-                    }
-                } else if (indicator === 'methyl') {
-                    if (phClass === 'ph-acidic') {
-                        display.style.background = '#ff6b6b';
-                        display.style.color = 'white';
-                        display.textContent = '메틸오렌지: 빨간색 (산성)';
-                    } else {
-                        display.style.background = '#ffd43b';
-                        display.style.color = '#333';
-                        display.textContent = '메틸오렌지: 노란색 (중성/염기성)';
                     }
                 }
             }
@@ -1081,65 +1076,62 @@ const yScale = height / maxValue;
                 const btn = document.getElementById('pauseBtn');
                 btn.textContent = this.isPaused ? '재생' : '일시정지';
             }
-
+            
             resetGraph() {
-    // 그래프 데이터만 초기화 (현재 이온 상태는 유지)
-    this.graphData = {
-        additions: [],
-        H: [],
-        OH: [],
-        Na: [],
-        Cl: [],
-        Ca: [],
-        CO3: [],
-        total: [],
-        temperature: []
-    };
-    this.additionCount = 0;  // 첨가 횟수 리셋
-    
-    // 빈 그래프 그리기
-    this.drawGraph();
-    
-    // 현재 상태를 첫 번째 데이터 포인트로 추가
-    const counts = {
-        H: 0, OH: 0, Na: 0, Cl: 0, Ca: 0, CO3: 0
-    };
-    
-    this.ions.forEach(ion => {
-        counts[ion.type]++;
-    });
-    
-    this.graphData.additions.push(0);
-    Object.keys(counts).forEach(key => {
-        this.graphData[key].push(counts[key]);
-    });
-    
-    const total = Object.values(counts).reduce((sum, count) => sum + count, 0);
-    this.graphData.total.push(total);
-    this.graphData.temperature.push(this.temperature);
-    
-    this.drawGraph();
-}
+                this.graphData = {
+                    additions: [],
+                    H: [],
+                    OH: [],
+                    Na: [],
+                    Cl: [],
+                    total: [],
+                    temperature: []
+                };
+                this.additionCount = 0;
+                
+                this.drawGraph();
+                
+                const counts = {
+                    H: 0, OH: 0, Na: 0, Cl: 0
+                };
+                
+                this.ions.forEach(ion => {
+                    counts[ion.type]++;
+                });
+                
+                this.graphData.additions.push(0);
+                Object.keys(counts).forEach(key => {
+                    this.graphData[key].push(counts[key]);
+                });
+                
+                const total = Object.values(counts).reduce((sum, count) => sum + count, 0);
+                this.graphData.total.push(total);
+                this.graphData.temperature.push(this.temperature);
+                
+                this.drawGraph();
+            }
             
             reset() {
                 this.ions.forEach(ion => ion.element.remove());
                 this.ions = [];
                 
+                this.waterAnimations.forEach(water => water.remove());
+                this.waterAnimations = [];
+                
                 this.temperature = 25;
                 this.neutralizationCount = 0;
+                this.waterMoleculeCount = 0;
                 
-               this.graphData = {
-                    additions: [],  // 첨가 횟수
+                this.graphData = {
+                    additions: [],
                     H: [],
                     OH: [],
                     Na: [],
                     Cl: [],
-                    Ca: [],
-                    CO3: [],
                     total: [],
                     temperature: []
                 };
-                this.additionCount = 0;  // 첨가 횟수 카운터
+                this.additionCount = 0;
                 this.timeStep = 0;
                 
                 this.updateStats();
