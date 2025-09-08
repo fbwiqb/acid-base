@@ -556,35 +556,38 @@
             }
             
             addIon(type, count = 1) {
-                for (let i = 0; i < count; i++) {
-                    const ion = document.createElement('div');
-                    ion.className = `ion ${type}`;
-                    ion.dataset.type = type;
-                    
-                    const x = Math.random() * (this.beaker.offsetWidth - 40);
-                    const y = Math.random() * (this.beaker.offsetHeight - 40);
-                    ion.style.left = x + 'px';
-                    ion.style.top = y + 'px';
-                    
-                    this.updateIonDisplay(ion);
-                    this.addDragFunctionality(ion);
-                    
-                    this.beaker.appendChild(ion);
-                    
-                    const vx = (type === 'H' || type === 'OH') ? (Math.random() - 0.5) * 2 : 0;
-                    const vy = (type === 'H' || type === 'OH') ? (Math.random() - 0.5) * 2 : 0;
-                    
-                    this.ions.push({
-                        element: ion,
-                        type: type,
-                        vx: vx,
-                        vy: vy,
-                        baseX: x,
-                        baseY: y,
-                        isSpectator: ['Na', 'Cl'].includes(type)
-                    });
-                }
-            }
+    for (let i = 0; i < count; i++) {
+        const ion = document.createElement('div');
+        ion.className = `ion ${type}`;
+        ion.dataset.type = type;
+        
+        // 수면 아래(10% 이하)에서만 이온 생성
+        const minY = this.beaker.offsetHeight * 0.1; // 수면 위치 (10%)
+        const x = Math.random() * (this.beaker.offsetWidth - 40);
+        const y = minY + Math.random() * (this.beaker.offsetHeight - minY - 40);
+        
+        ion.style.left = x + 'px';
+        ion.style.top = y + 'px';
+        
+        this.updateIonDisplay(ion);
+        this.addDragFunctionality(ion);
+        
+        this.beaker.appendChild(ion);
+        
+        const vx = (type === 'H' || type === 'OH') ? (Math.random() - 0.5) * 2 : 0;
+        const vy = (type === 'H' || type === 'OH') ? (Math.random() - 0.5) * 2 : 0;
+        
+        this.ions.push({
+            element: ion,
+            type: type,
+            vx: vx,
+            vy: vy,
+            baseX: x,
+            baseY: y,
+            isSpectator: ['Na', 'Cl'].includes(type)
+        });
+    }
+}
             
             updateIonDisplay(ion) {
                 const type = ion.dataset.type;
