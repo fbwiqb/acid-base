@@ -775,40 +775,48 @@
                 });
             }
             
-            checkNeutralization() {
-                const hIons = this.ions.filter(ion => ion.type === 'H');
-                const ohIons = this.ions.filter(ion => ion.type === 'OH');
+         checkNeutralization() {
+    const hIons = this.ions.filter(ion => ion.type === 'H');
+    const ohIons = this.ions.filter(ion => ion.type === 'OH');
+    
+    for (let i = hIons.length - 1; i >= 0; i--) {
+        for (let j = ohIons.length - 1; j >= 0; j--) {
+            const h = hIons[i];
+            const oh = ohIons[j];
+            
+            if (this.checkCollision(h.element, oh.element)) {
+                this.createWaterAnimation(h.element, oh.element);
                 
-                for (let i = hIons.length - 1; i >= 0; i--) {
-                    for (let j = ohIons.length - 1; j >= 0; j--) {
-                        const h = hIons[i];
-                        const oh = ohIons[j];
-                        
-                        if (this.checkCollision(h.element, oh.element)) {
-                            this.createWaterAnimation(h.element, oh.element);
-                            
-                            h.element.remove();
-                            oh.element.remove();
-                            
-                            this.ions = this.ions.filter(ion => ion !== h && ion !== oh);
-                            hIons.splice(i, 1);
-                            ohIons.splice(j, 1);
-                            
-                            this.neutralizationCount++;
-                            this.waterMoleculeCount++;
-                            this.temperature += 2;
-                            
-                            this.updateStats();
-                            this.updateIndicator(); 
-                            break;
-                        }
+                h.element.remove();
+                oh.element.remove();
+                
+                this.ions = this.ions.filter(ion => ion !== h && ion !== oh);
+                hIons.splice(i, 1);
+                ohIons.splice(j, 1);
+                
+                this.neutralizationCount++;
+                this.waterMoleculeCount++;
+                this.temperature += 2;
+                
+                this.updateStats();
+                
+                // 지시약이 '없음'일 때만 물분자 디스플레이 즉시 업데이트
+                if (document.getElementById('indicatorSelect').value === 'none') {
+                    const waterDisplay = document.getElementById('waterMoleculeDisplay');
+                    if (waterDisplay) {
+                        waterDisplay.innerHTML = '<div class="water-molecule-icon">H₂O</div>'.repeat(this.waterMoleculeCount);
                     }
                 }
                 
-                if (this.temperature > 25) {
-                    this.temperature -= 0.01;
-                }
+                break;
             }
+        }
+    }
+    
+    if (this.temperature > 25) {
+        this.temperature -= 0.01;
+    }
+}
             
             checkCollision(elem1, elem2) {
                 const rect1 = elem1.getBoundingClientRect();
