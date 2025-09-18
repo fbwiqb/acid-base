@@ -360,7 +360,33 @@
             from { opacity: 0; transform: scale(0); }
             to { opacity: 1; transform: scale(1); }
         }
-        
+        @keyframes boiling {
+    0%, 100% { 
+        transform: scale(1) rotate(0deg);
+        filter: hue-rotate(0deg);
+    }
+    25% { 
+        transform: scale(1.02) rotate(1deg);
+        filter: hue-rotate(20deg);
+    }
+    50% { 
+        transform: scale(1) rotate(-1deg);
+        filter: hue-rotate(40deg);
+    }
+    75% { 
+        transform: scale(1.02) rotate(1deg);
+        filter: hue-rotate(20deg);
+    }
+}
+
+@keyframes warningPulse {
+    0%, 100% { 
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% { 
+        transform: translate(-50%, -50%) scale(1.05);
+    }
+}
         .water-animation {
             position: absolute;
             width: 60px;
@@ -475,29 +501,30 @@
     <script>
         class NeutralizationSimulation {
             constructor() {
-                this.ions = [];
-                this.isPaused = false;
-                this.isShapeMode = false;
-                this.spectatorHidden = false;
-                this.persistWater = false;
-                this.temperature = 25;
-                this.neutralizationCount = 0;
-                this.waterMoleculeCount = 0;
-                this.waterAnimations = [];
-                this.graphData = {
-                    additions: [],
-                    H: [],
-                    OH: [],
-                    Na: [],
-                    Cl: [],
-                    total: [],
-                    temperature: []
-                };
-                this.additionCount = 0;
-                this.timeStep = 0;
-                
-                this.init();
-            }
+    this.ions = [];
+    this.isPaused = false;
+    this.isShapeMode = false;
+    this.spectatorHidden = false;
+    this.persistWater = false;
+    this.temperature = 25;
+    this.neutralizationCount = 0;
+    this.waterMoleculeCount = 0;
+    this.waterAnimations = [];
+    this.safetyViolation = false;  // 추가
+    this.graphData = {
+        additions: [],
+        H: [],
+        OH: [],
+        Na: [],
+        Cl: [],
+        total: [],
+        temperature: []
+    };
+    this.additionCount = 0;
+    this.timeStep = 0;
+    
+    this.init();
+}
             
             init() {
                 this.beaker = document.getElementById('beaker');
@@ -801,7 +828,7 @@ checkOverlap(x, y, size) {
                 });
             }
             
- checkNeutralization() {
+checkNeutralization() {
     const hIons = this.ions.filter(ion => ion.type === 'H');
     const ohIons = this.ions.filter(ion => ion.type === 'OH');
     
@@ -823,6 +850,11 @@ checkOverlap(x, y, size) {
                 this.neutralizationCount++;
                 this.waterMoleculeCount++;
                 this.temperature += 2;
+                
+                // 온도 100도 체크 추가
+                if (this.temperature >= 100 && !this.safetyViolation) {
+                    this.showSafetyViolation();
+                }
                 
                 this.updateStats();
                 
@@ -846,7 +878,7 @@ checkOverlap(x, y, size) {
     if (this.temperature > 25) {
         this.temperature -= 0.01;
     }
-}        
+}      
             checkCollision(elem1, elem2) {
                 const rect1 = elem1.getBoundingClientRect();
                 const rect2 = elem2.getBoundingClientRect();
@@ -1017,7 +1049,50 @@ checkOverlap(x, y, size) {
                     legendY += 15;
                 });
             }
-            
+
+            showSafetyViolation() {
+    this.safetyViolation = true;
+    this.isPaused = true;
+    
+    // 끓는 애니메이션 효과
+    const beaker = document.getElementById('beaker');
+    beaker.style.animation = 'boiling 0.5s infinite';
+    
+    // 경고 메시지 표시
+    setTimeout(() => {
+        const warningDiv = document.createElement('div');
+        warningDiv.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #ff0000 0%, #ff6b6b 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 10000;
+            box-shadow: 0 10px 40px rgba(255, 0, 0, 0.5);
+            animation: warningPulse 1s infinite;
+        `;
+        warningDiv.innerHTML = `
+            ⚠️ 경고 ⚠️<br><br>
+            장난하라고 만든 것이 아닌데...<br>
+            당신은 실험실 안전 규칙을 어겼습니다.<br><br>
+            신도경 선생님은 이 일을 기억할 것입니다...
+        `;
+        document.body.appendChild(warningDiv);
+        
+        // 모든 버튼 비활성화
+        document.querySelectorAll('button, .dropper').forEach(btn => {
+            btn.disabled = true;
+            btn.style.opacity = '0.3';
+            btn.style.cursor = 'not-allowed';
+        });
+    }, 2000);
+}
             updateStats() {
                 const counts = {
                     H: 0, OH: 0, Na: 0, Cl: 0
@@ -1205,33 +1280,48 @@ updateIndicator() {
                 this.drawGraph();
             }
             
-            reset() {
-                this.ions.forEach(ion => ion.element.remove());
-                this.ions = [];
-                
-                this.waterAnimations.forEach(water => water.remove());
-                this.waterAnimations = [];
-                
-                this.temperature = 25;
-                this.neutralizationCount = 0;
-                this.waterMoleculeCount = 0;
-                
-                this.graphData = {
-                    additions: [],
-                    H: [],
-                    OH: [],
-                    Na: [],
-                    Cl: [],
-                    total: [],
-                    temperature: []
-                };
-                this.additionCount = 0;
-                this.timeStep = 0;
-                
-                this.updateStats();
-                this.drawGraph();
-                this.updateIndicator();
-            }
+           reset() {
+    // 안전 위반 상태 리셋
+    if (this.safetyViolation) {
+        this.safetyViolation = false;
+        document.getElementById('beaker').style.animation = '';
+        const warningDiv = document.querySelector('div[style*="경고"]');
+        if (warningDiv) warningDiv.remove();
+        
+        // 버튼 재활성화
+        document.querySelectorAll('button, .dropper').forEach(btn => {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            btn.style.cursor = 'pointer';
+        });
+    }
+    
+    this.ions.forEach(ion => ion.element.remove());
+    this.ions = [];
+    
+    this.waterAnimations.forEach(water => water.remove());
+    this.waterAnimations = [];
+    
+    this.temperature = 25;
+    this.neutralizationCount = 0;
+    this.waterMoleculeCount = 0;
+    
+    this.graphData = {
+        additions: [],
+        H: [],
+        OH: [],
+        Na: [],
+        Cl: [],
+        total: [],
+        temperature: []
+    };
+    this.additionCount = 0;
+    this.timeStep = 0;
+    
+    this.updateStats();
+    this.drawGraph();
+    this.updateIndicator();
+}
         }
         
         const style = document.createElement('style');
