@@ -1179,13 +1179,20 @@ updateIndicator() {
         this.drawTemperatureGraph();
         
     } else if (indicator === 'btb') {
-        display.classList.add(phClass);
-        const colors = {
-            'ph-acidic': '노란색',
-            'ph-neutral': '초록색',
-            'ph-basic': '파란색'
-        };
-        display.textContent = `BTB: ${colors[phClass]} (${phText})`;
+        // BTB 배경색 변경
+        if (phClass === 'ph-acidic') {
+            display.style.background = '#fff59d';  // 노란색
+            display.style.color = '#f57f17';
+            display.textContent = 'BTB: 노란색 (산성)';
+        } else if (phClass === 'ph-neutral') {
+            display.style.background = '#a5d6a7';  // 초록색
+            display.style.color = '#2e7d32';
+            display.textContent = 'BTB: 초록색 (중성)';
+        } else if (phClass === 'ph-basic') {
+            display.style.background = '#90caf9';  // 파란색
+            display.style.color = '#1565c0';
+            display.textContent = 'BTB: 파란색 (염기성)';
+        }
     } else if (indicator === 'phenol') {
         if (phClass === 'ph-basic') {
             display.style.background = '#ff69b4';
@@ -1198,7 +1205,6 @@ updateIndicator() {
         }
     }
 }
-            
             drawTemperatureGraph() {
                 const canvas = document.getElementById('tempGraph');
                 if (!canvas) return;
