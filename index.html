@@ -744,89 +744,95 @@ checkOverlap(x, y, size) {
                 });
             }
             
-            moveIons() {
-                const hIons = this.ions.filter(ion => ion.type === 'H');
-                const ohIons = this.ions.filter(ion => ion.type === 'OH');
+          moveIons() {
+    const hIons = this.ions.filter(ion => ion.type === 'H');
+    const ohIons = this.ions.filter(ion => ion.type === 'OH');
+    
+    this.ions.forEach(ionObj => {
+        const ion = ionObj.element;
+        let x = parseFloat(ion.style.left);
+        let y = parseFloat(ion.style.top);
+        
+        // 반응하지 않는 이온들(Na, Cl)은 제자리에 고정
+        if (ionObj.isSpectator) {
+            // 떠는 애니메이션 제거 - 고정 위치 유지
+            x = ionObj.baseX;
+            y = ionObj.baseY;
+        } else if (ionObj.type === 'H') {
+            // H+ 이온 움직임 (OH-로 이동)
+            ohIons.forEach(ohObj => {
+                const ohX = parseFloat(ohObj.element.style.left);
+                const ohY = parseFloat(ohObj.element.style.top);
+                const dx = ohX - x;
+                const dy = ohY - y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
                 
-                this.ions.forEach(ionObj => {
-                    const ion = ionObj.element;
-                    let x = parseFloat(ion.style.left);
-                    let y = parseFloat(ion.style.top);
-                    
-                    if (ionObj.isSpectator) {
-                        x = ionObj.baseX + (Math.random() - 0.5) * 1;
-                        y = ionObj.baseY + (Math.random() - 0.5) * 1;
-                    } else if (ionObj.type === 'H') {
-                        ohIons.forEach(ohObj => {
-                            const ohX = parseFloat(ohObj.element.style.left);
-                            const ohY = parseFloat(ohObj.element.style.top);
-                            const dx = ohX - x;
-                            const dy = ohY - y;
-                            const distance = Math.sqrt(dx * dx + dy * dy);
-                            
-                            if (distance > 0) {
-                                const force = 200 / (distance + 50);
-                                ionObj.vx += force * dx / distance;
-                                ionObj.vy += force * dy / distance;
-                            }
-                        });
-                        
-                        const maxSpeed = 3;
-                        const speed = Math.sqrt(ionObj.vx * ionObj.vx + ionObj.vy * ionObj.vy);
-                        if (speed > maxSpeed) {
-                            ionObj.vx = (ionObj.vx / speed) * maxSpeed;
-                            ionObj.vy = (ionObj.vy / speed) * maxSpeed;
-                        }
-                        
-                        x += ionObj.vx;
-                        y += ionObj.vy;
-                        ionObj.vx *= 0.95;
-                        ionObj.vy *= 0.95;
-                        
-                    } else if (ionObj.type === 'OH') {
-                        hIons.forEach(hObj => {
-                            const hX = parseFloat(hObj.element.style.left);
-                            const hY = parseFloat(hObj.element.style.top);
-                            const dx = hX - x;
-                            const dy = hY - y;
-                            const distance = Math.sqrt(dx * dx + dy * dy);
-                            
-                            if (distance > 0) {
-                                const force = 200 / (distance + 50);
-                                ionObj.vx += force * dx / distance;
-                                ionObj.vy += force * dy / distance;
-                            }
-                        });
-                        
-                        const maxSpeed = 3;
-                        const speed = Math.sqrt(ionObj.vx * ionObj.vx + ionObj.vy * ionObj.vy);
-                        if (speed > maxSpeed) {
-                            ionObj.vx = (ionObj.vx / speed) * maxSpeed;
-                            ionObj.vy = (ionObj.vy / speed) * maxSpeed;
-                        }
-                        
-                        x += ionObj.vx;
-                        y += ionObj.vy;
-                        ionObj.vx *= 0.95;
-                        ionObj.vy *= 0.95;
-                    }
-                    
-                    x = Math.max(0, Math.min(x, this.beaker.offsetWidth - ion.offsetWidth));
-                    y = Math.max(0, Math.min(y, this.beaker.offsetHeight - ion.offsetHeight));
-                    
-                    if (!ionObj.isSpectator) {
-                        if (x <= 0 || x >= this.beaker.offsetWidth - ion.offsetWidth) {
-                            ionObj.vx = -ionObj.vx * 0.8;
-                        }
-                        if (y <= 0 || y >= this.beaker.offsetHeight - ion.offsetHeight) {
-                            ionObj.vy = -ionObj.vy * 0.8;
-                        }
-                    }
-                    
-                    ion.style.left = x + 'px';
-                    ion.style.top = y + 'px';
-                });
+                if (distance > 0) {
+                    const force = 200 / (distance + 50);
+                    ionObj.vx += force * dx / distance;
+                    ionObj.vy += force * dy / distance;
+                }
+            });
+            
+            const maxSpeed = 3;
+            const speed = Math.sqrt(ionObj.vx * ionObj.vx + ionObj.vy * ionObj.vy);
+            if (speed > maxSpeed) {
+                ionObj.vx = (ionObj.vx / speed) * maxSpeed;
+                ionObj.vy = (ionObj.vy / speed) * maxSpeed;
             }
+            
+            x += ionObj.vx;
+            y += ionObj.vy;
+            ionObj.vx *= 0.95;
+            ionObj.vy *= 0.95;
+            
+        } else if (ionObj.type === 'OH') {
+            // OH- 이온 움직임 (H+로 이동)
+            hIons.forEach(hObj => {
+                const hX = parseFloat(hObj.element.style.left);
+                const hY = parseFloat(hObj.element.style.top);
+                const dx = hX - x;
+                const dy = hY - y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance > 0) {
+                    const force = 200 / (distance + 50);
+                    ionObj.vx += force * dx / distance;
+                    ionObj.vy += force * dy / distance;
+                }
+            });
+            
+            const maxSpeed = 3;
+            const speed = Math.sqrt(ionObj.vx * ionObj.vx + ionObj.vy * ionObj.vy);
+            if (speed > maxSpeed) {
+                ionObj.vx = (ionObj.vx / speed) * maxSpeed;
+                ionObj.vy = (ionObj.vy / speed) * maxSpeed;
+            }
+            
+            x += ionObj.vx;
+            y += ionObj.vy;
+            ionObj.vx *= 0.95;
+            ionObj.vy *= 0.95;
+        }
+        
+        // 경계 체크
+        x = Math.max(0, Math.min(x, this.beaker.offsetWidth - ion.offsetWidth));
+        y = Math.max(0, Math.min(y, this.beaker.offsetHeight - ion.offsetHeight));
+        
+        // 반응 이온들의 벽 충돌 처리
+        if (!ionObj.isSpectator) {
+            if (x <= 0 || x >= this.beaker.offsetWidth - ion.offsetWidth) {
+                ionObj.vx = -ionObj.vx * 0.8;
+            }
+            if (y <= 0 || y >= this.beaker.offsetHeight - ion.offsetHeight) {
+                ionObj.vy = -ionObj.vy * 0.8;
+            }
+        }
+        
+        ion.style.left = x + 'px';
+        ion.style.top = y + 'px';
+    });
+}
             
 checkNeutralization() {
     const hIons = this.ions.filter(ion => ion.type === 'H');
@@ -1280,7 +1286,7 @@ updateIndicator() {
                 this.drawGraph();
             }
             
-           reset() {
+reset() {
     // 안전 위반 상태 리셋
     if (this.safetyViolation) {
         this.safetyViolation = false;
@@ -1296,16 +1302,26 @@ updateIndicator() {
         });
     }
     
+    // 이온 제거
     this.ions.forEach(ion => ion.element.remove());
     this.ions = [];
     
+    // 물 애니메이션 제거
     this.waterAnimations.forEach(water => water.remove());
     this.waterAnimations = [];
     
+    // 물 분자 표시 초기화 (대시보드에 표시된 H₂O 아이콘들 제거)
+    const waterDisplay = document.getElementById('waterMoleculeDisplay');
+    if (waterDisplay) {
+        waterDisplay.innerHTML = '';
+    }
+    
+    // 상태 변수 초기화
     this.temperature = 25;
     this.neutralizationCount = 0;
     this.waterMoleculeCount = 0;
     
+    // 그래프 데이터 초기화
     this.graphData = {
         additions: [],
         H: [],
@@ -1318,6 +1334,7 @@ updateIndicator() {
     this.additionCount = 0;
     this.timeStep = 0;
     
+    // UI 업데이트
     this.updateStats();
     this.drawGraph();
     this.updateIndicator();
