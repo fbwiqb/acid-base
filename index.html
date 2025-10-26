@@ -410,7 +410,10 @@
 <body>
     <div class="container">
         <h1>🧪 중화반응 시뮬레이션</h1>
-        
+        <div class="home-buttons">
+    <button class="home-btn" onclick="showTutorial()">📖 사용법</button>
+    <button class="home-btn" onclick="showDevLog()">📝 개발자 로그</button>
+</div>
         <div class="main-content">
             <!-- 컨트롤 패널 -->
             <div class="control-panel">
@@ -497,7 +500,55 @@
             </div>
         </div>
     </div>
+<!-- 튜토리얼 모달 -->
+<div class="modal" id="tutorialModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>📖 사용법 안내</h3>
+            <button class="modal-close" onclick="closeTutorial()">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="log-entry">
+                <div class="log-date">🎯 프로그램 소개</div>
+                <div class="log-text">
+                    <strong>중화반응 시뮬레이션</strong>은 산과 염기의 중화 반응을 시각적으로 이해할 수 있는 교육용 프로그램입니다.
+                </div>
+            </div>
+            <!-- 추가 내용 작성 -->
+        </div>
+    </div>
+</div>
 
+<!-- 개발자 로그 모달 -->
+<div class="modal" id="devLogModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>📝 개발자 로그</h3>
+            <button class="modal-close" onclick="closeDevLog()">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="log-entry">
+                <div class="log-date">2025. 10. 26. (일)</div>
+                <div class="log-text">
+                    <strong>중화반응 시뮬레이션 v1.0 출시</strong><br>
+                    산과 염기의 중화 반응을 시각적으로 학습할 수 있는 시뮬레이션 프로그램입니다.
+                </div>
+            </div>
+            
+            <div class="log-entry">
+                <div class="log-date">©️ 저작권 정보</div>
+                <div class="log-text">
+                    <strong>중화반응 시뮬레이션 v1.0</strong><br><br>
+                    ⓒ 2025 충남삼성고등학교 신도경 교사<br>
+                    이메일: <a href="mailto:pantarei01@cnsa.hs.kr">pantarei01@cnsa.hs.kr</a><br><br>
+                    
+                    본 프로그램은 교육 목적으로 제작되었으며, 자유롭게 사용하실 수 있습니다.<br>
+                    상업적 이용 시에는 제작자에게 문의해 주시기 바랍니다.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
     <script>
         class NeutralizationSimulation {
             constructor() {
@@ -626,7 +677,35 @@
         });
     }
 }
+// 모달 함수들
+function showTutorial() {
+    document.getElementById('tutorialModal').style.display = 'block';
+}
 
+function closeTutorial() {
+    document.getElementById('tutorialModal').style.display = 'none';
+}
+
+function showDevLog() {
+    document.getElementById('devLogModal').style.display = 'block';
+}
+
+function closeDevLog() {
+    document.getElementById('devLogModal').style.display = 'none';
+}
+
+// 모달 외부 클릭 시 닫기
+window.onclick = function(event) {
+    const tutorialModal = document.getElementById('tutorialModal');
+    const devLogModal = document.getElementById('devLogModal');
+    
+    if (event.target === tutorialModal) {
+        tutorialModal.style.display = 'none';
+    }
+    if (event.target === devLogModal) {
+        devLogModal.style.display = 'none';
+    }
+}
 // 새로운 함수 추가: 겹침 확인
 checkOverlap(x, y, size) {
     for (let ionObj of this.ions) {
@@ -1087,7 +1166,7 @@ checkNeutralization() {
             ⚠️ 경고 ⚠️<br><br>
             장난하라고 만든 것이 아닌데...<br>
             당신은 실험실 안전 규칙을 어겼습니다.<br><br>
-            신도경 선생님은 이 일을 기억할 것입니다...
+            선생님은 이 일을 기억할 것입니다...
         `;
         document.body.appendChild(warningDiv);
         
@@ -1367,5 +1446,9 @@ reset() {
         
         const sim = new NeutralizationSimulation();
     </script>
+    <div class="footer">
+    ⓒ 2025 충남삼성고등학교 신도경T<br>
+    <a href="mailto:pantarei01@cnsa.hs.kr">pantarei01@cnsa.hs.kr</a>
+</div>
 </body>
 </html>
