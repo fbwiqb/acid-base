@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>중화반응 시뮬레이션</title>
-<style>
+    <style>
         body {
             margin: 0;
             padding: 20px;
             font-family: 'Malgun Gothic', sans-serif;
-            background: linear-gradient(135deg, #f8f9ff 0%, #eef0f8 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
         }
         
@@ -19,15 +19,15 @@
             background: white;
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 20px 60px rgba(61,78,159,0.2);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
         
         h1 {
             text-align: center;
-            color: #3d4e9f;
+            color: #333;
             margin-bottom: 30px;
             font-size: 2.5em;
-            text-shadow: 2px 2px 4px rgba(61,78,159,0.1);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         
         .main-content {
@@ -37,17 +37,16 @@
         }
         
         .control-panel {
-            background: #f8f9ff;
+            background: #f8f9fa;
             padding: 20px;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(61,78,159,0.1);
-            border: 2px solid #e8ecf1;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .control-section {
             margin-bottom: 25px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #e8ecf1;
+            border-bottom: 2px solid #e0e0e0;
         }
         
         .control-section:last-child {
@@ -55,7 +54,7 @@
         }
         
         .control-section h3 {
-            color: #3d4e9f;
+            color: #555;
             margin-bottom: 15px;
             font-size: 1.1em;
         }
@@ -81,23 +80,22 @@
         }
         
         select:hover, input[type="range"]:hover {
-            border-color: #3d4e9f;
+            border-color: #667eea;
         }
         
         button {
-            background: #3d4e9f;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
             cursor: pointer;
             font-weight: bold;
             margin-top: 10px;
-            transition: transform 0.2s, background 0.3s;
+            transition: transform 0.2s;
         }
         
         button:hover {
-            background: #2d3e8f;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(61, 78, 159, 0.4);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
         
         button:active {
@@ -107,40 +105,40 @@
         .simulation-area {
             background: white;
             border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(61,78,159,0.1);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             padding: 20px;
         }
         
-        #beaker {
-            width: 100%;
-            height: 400px;
-            background: linear-gradient(to bottom, 
-                rgba(255,255,255,0) 0%, 
-                rgba(255,255,255,0) 10%,
-                rgba(200,230,255,0.2) 10%,
-                rgba(200,230,255,0.4) 100%);
-            border: 3px solid #3d4e9f;
-            border-top: none;
-            border-radius: 0 0 50px 50px;
-            position: relative;
-            overflow: hidden;
-            margin-top: 20px;
-        }
+#beaker {
+    width: 100%;
+    height: 400px;
+    background: linear-gradient(to bottom, 
+        rgba(255,255,255,0) 0%, 
+        rgba(255,255,255,0) 10%,
+        rgba(200,230,255,0.2) 10%,
+        rgba(200,230,255,0.4) 100%);
+    border: 3px solid #333;
+    border-top: none;
+    border-radius: 0 0 50px 50px;
+    position: relative;
+    overflow: hidden;
+    margin-top: 20px;
+}
 
-        #beaker::before {
-            content: '';
-            position: absolute;
-            top: 10%;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(to right, 
-                transparent 0%, 
-                rgba(61,78,159,0.5) 20%, 
-                rgba(61,78,159,0.5) 80%, 
-                transparent 100%);
-            animation: wave 3s linear infinite;
-        }
+#beaker::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(to right, 
+        transparent 0%, 
+        rgba(100,150,200,0.5) 20%, 
+        rgba(100,150,200,0.5) 80%, 
+        transparent 100%);
+    animation: wave 3s linear infinite;
+}
         
         @keyframes wave {
             0%, 100% { transform: translateX(0) translateY(0); }
@@ -189,11 +187,10 @@
         }
         
         .graph-container {
-            background: #f8f9ff;
+            background: #f8f9fa;
             padding: 20px;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(61,78,159,0.1);
-            border: 2px solid #e8ecf1;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         #ionGraph {
@@ -209,7 +206,7 @@
             padding: 15px;
             background: white;
             border-radius: 10px;
-            box-shadow: inset 0 2px 5px rgba(61,78,159,0.05);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
         }
         
         .stat-item {
@@ -217,7 +214,7 @@
             justify-content: space-between;
             margin-bottom: 10px;
             padding: 8px;
-            background: #f8f9ff;
+            background: #f8f9fa;
             border-radius: 5px;
         }
 
@@ -273,7 +270,7 @@
         
         .stat-value {
             font-weight: bold;
-            color: #3d4e9f;
+            color: #333;
         }
         
         .indicator-display {
@@ -307,28 +304,27 @@
         }
         
         .toggle-btn.active {
-            background: #3d4e9f;
+            background: #667eea;
             color: white;
-            border-color: #2d3e8f;
+            border-color: #5a67d8;
         }
         
         .dropper {
             display: inline-block;
             padding: 8px 15px;
-            background: #3d4e9f;
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
             border-radius: 20px;
             color: white;
             cursor: pointer;
             margin: 5px;
             transition: all 0.3s;
             font-weight: bold;
-            box-shadow: 0 3px 10px rgba(61,78,159,0.2);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
         }
         
         .dropper:hover {
-            background: #2d3e8f;
             transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(61,78,159,0.3);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
         
         .dropper:active {
@@ -364,35 +360,33 @@
             from { opacity: 0; transform: scale(0); }
             to { opacity: 1; transform: scale(1); }
         }
-        
         @keyframes boiling {
-            0%, 100% { 
-                transform: scale(1) rotate(0deg);
-                filter: hue-rotate(0deg);
-            }
-            25% { 
-                transform: scale(1.02) rotate(1deg);
-                filter: hue-rotate(20deg);
-            }
-            50% { 
-                transform: scale(1) rotate(-1deg);
-                filter: hue-rotate(40deg);
-            }
-            75% { 
-                transform: scale(1.02) rotate(1deg);
-                filter: hue-rotate(20deg);
-            }
-        }
+    0%, 100% { 
+        transform: scale(1) rotate(0deg);
+        filter: hue-rotate(0deg);
+    }
+    25% { 
+        transform: scale(1.02) rotate(1deg);
+        filter: hue-rotate(20deg);
+    }
+    50% { 
+        transform: scale(1) rotate(-1deg);
+        filter: hue-rotate(40deg);
+    }
+    75% { 
+        transform: scale(1.02) rotate(1deg);
+        filter: hue-rotate(20deg);
+    }
+}
 
-        @keyframes warningPulse {
-            0%, 100% { 
-                transform: translate(-50%, -50%) scale(1);
-            }
-            50% { 
-                transform: translate(-50%, -50%) scale(1.05);
-            }
-        }
-        
+@keyframes warningPulse {
+    0%, 100% { 
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% { 
+        transform: translate(-50%, -50%) scale(1.05);
+    }
+}
         .water-animation {
             position: absolute;
             width: 60px;
@@ -411,179 +405,38 @@
             animation: none !important;
             opacity: 1 !important;
         }
-        
-        /* 홈 버튼 스타일 */
-        .home-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-        
-        .home-btn {
-            background: #3d4e9f;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            width: auto;
-        }
-        
-        .home-btn:hover {
-            background: #2d3e8f;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(61, 78, 159, 0.4);
-        }
-        
-        /* 모달 스타일 */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            animation: fadeInModal 0.3s;
-        }
-        
-        @keyframes fadeInModal {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .modal-content {
-            background-color: white;
-            margin: 5% auto;
-            padding: 30px;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            animation: slideIn 0.3s;
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        .modal-header {
-            background: #3d4e9f;
-            color: white;
-            padding: 20px;
-            margin: -30px -30px 20px -30px;
-            border-radius: 20px 20px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .modal-header h3 {
-            color: white;
-            margin: 0;
-            font-size: 1.8em;
-        }
-        
-        .modal-close {
-            background: none;
-            color: white;
-            border: none;
-            font-size: 30px;
-            cursor: pointer;
-            padding: 0;
-            width: 35px;
-            height: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: all 0.3s;
-            box-shadow: none;
-        }
-        
-        .modal-close:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: rotate(90deg);
-        }
-        
-        .modal-body {
-            max-height: 60vh;
-            overflow-y: auto;
-            padding: 10px;
-            color: #333;
-        }
-        
-        .log-entry {
-            margin-bottom: 25px;
-            padding: 20px;
-            background: #f8f9ff;
-            border-radius: 10px;
-            border-left: 4px solid #3d4e9f;
-        }
-        
-        .log-date {
-            color: #3d4e9f;
-            font-weight: bold;
-            font-size: 1.1em;
-            margin-bottom: 10px;
-        }
-        
-        .log-text {
-            color: #333;
-            line-height: 1.8;
-        }
-        
-        .log-text strong {
-            color: #3d4e9f;
-        }
-        
-        .log-text a {
-            color: #3d4e9f;
-            text-decoration: none;
-        }
-        
-        .log-text a:hover {
-            text-decoration: underline;
-        }
-        
         /* Footer 스타일 */
-        .footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: #3d4e9f;
-            color: white;
-            text-align: center;
-            padding: 10px 20px;
-            font-size: 14px;
-            z-index: 999;
-        }
-        
-        .footer a {
-            color: white;
-            text-decoration: none;
-        }
-        
-        .footer a:hover {
-            text-decoration: underline;
-        }
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #3d4e9f;
+    color: white;
+    text-align: center;
+    padding: 10px 20px;
+    font-size: 14px;
+    z-index: 999;
+}
+
+.footer a {
+    color: white;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🧪 중화반응 시뮬레이션</h1>
-        <div class="home-buttons">
-    <button class="home-btn" onclick="showTutorial()">📖 사용법</button>
-</div>
+    <!-- 홈 버튼 섹션 -->
+    <div class="home-buttons">
+        <button class="home-btn" onclick="showTutorial()">📖 사용법</button>
+        <button class="home-btn" onclick="showDevLog()">📝 개발자 로그</button>
+    </div>
         <div class="main-content">
             <!-- 컨트롤 패널 -->
             <div class="control-panel">
@@ -670,26 +523,6 @@
             </div>
         </div>
     </div>
-<!-- 튜토리얼 모달 -->
-<div class="modal" id="tutorialModal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>📖 사용법 안내</h3>
-            <button class="modal-close" onclick="closeTutorial()">×</button>
-        </div>
-        <div class="modal-body">
-            <div class="log-entry">
-                <div class="log-date">🎯 프로그램 소개</div>
-                <div class="log-text">
-                    <strong>중화반응 시뮬레이션</strong>은 산과 염기의 중화 반응을 시각적으로 이해할 수 있는 교육용 프로그램입니다.
-                </div>
-            </div>
-            <!-- 추가 내용 작성 -->
-        </div>
-    </div>
-</div>
-
-<!-- 개발자 로그 모달 -->
 <div class="modal" id="devLogModal">
     <div class="modal-content">
         <div class="modal-header">
@@ -719,7 +552,140 @@
         </div>
     </div>
 </div>
+<div class="modal" id="tutorialModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>📖 사용법 안내</h3>
+            <button class="modal-close" onclick="closeTutorial()">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="log-entry">
+                <div class="log-date">🎯 프로그램 소개</div>
+                <div class="log-text">
+                    <strong>중화반응 시뮬레이션</strong>은 산과 염기의 중화 반응을 시각적으로 이해할 수 있는 교육용 프로그램입니다. 
+                    염산(HCl)과 수산화 나트륨(NaOH)의 중화 반응 과정을 이온 단위로 관찰하고, 
+                    온도 변화와 지시약 색 변화를 실시간으로 확인할 수 있습니다.
+                </div>
+            </div>
+
+            <div class="log-entry">
+                <div class="log-date">📚 기본 사용법</div>
+                <div class="log-text">
+                    <strong>1단계: 용액 첨가</strong><br>
+                    • <strong>산 첨가 💧</strong>: 염산(HCl)을 추가합니다. H⁺와 Cl⁻ 이온이 생성됩니다<br>
+                    • <strong>염기 첨가 💧</strong>: 수산화 나트륨(NaOH)을 추가합니다. Na⁺와 OH⁻ 이온이 생성됩니다<br>
+                    • 클릭할 때마다 5개의 이온이 추가됩니다<br><br>
+                    
+                    <strong>2단계: 중화 반응 관찰</strong><br>
+                    • H⁺(빨간색)와 OH⁻(파란색) 이온이 만나면 물(H₂O) 분자가 생성됩니다<br>
+                    • 중화 반응이 일어나면 온도가 상승합니다 (발열 반응)<br>
+                    • 반응하지 않는 이온(Na⁺, Cl⁻)은 남아있습니다<br><br>
+                    
+                    <strong>3단계: 지시약으로 pH 확인</strong><br>
+                    • <strong>BTB 용액</strong>: 산성(노란색) → 중성(초록색) → 염기성(파란색)<br>
+                    • <strong>페놀프탈레인</strong>: 산성/중성(무색) → 염기성(분홍색)<br>
+                    • <strong>없음</strong>: 온도 변화 그래프를 관찰할 수 있습니다<br><br>
+                    
+                    <strong>4단계: 그래프 분석</strong><br>
+                    • 오른쪽 그래프에서 각 이온의 수 변화를 확인하세요<br>
+                    • 중화점에서는 H⁺와 OH⁻ 이온 수가 같아집니다<br>
+                    • 통계 패널에서 현재 이온 수와 생성된 물 분자 수를 확인할 수 있습니다
+                </div>
+            </div>
+
+            <div class="log-entry">
+                <div class="log-date">⚙️ 고급 기능</div>
+                <div class="log-text">
+                    <strong>표시 옵션:</strong><br>
+                    • <strong>이온식</strong>: 화학 기호로 이온을 표시합니다 (H⁺, OH⁻, Na⁺, Cl⁻)<br>
+                    • <strong>도형</strong>: 이온을 다양한 도형으로 표시합니다<br>
+                    &nbsp;&nbsp;- H⁺: 빨간 삼각형 ▼<br>
+                    &nbsp;&nbsp;- OH⁻: 파란 별 ★<br>
+                    &nbsp;&nbsp;- Na⁺: 보라 사각형 ■<br>
+                    &nbsp;&nbsp;- Cl⁻: 파란 원 ●<br><br>
+                    
+                    <strong>제어 옵션:</strong><br>
+                    • <strong>반응하지 않는 이온 숨기기</strong>: Na⁺와 Cl⁻ 이온을 숨겨 중화 반응에 집중할 수 있습니다<br>
+                    • <strong>물분자 사라지지 않기</strong>: 생성된 물 분자를 계속 화면에 표시합니다<br>
+                    • <strong>일시정지</strong>: 이온의 움직임을 멈춰 관찰할 수 있습니다<br>
+                    • <strong>그래프 초기화</strong>: 그래프 데이터만 초기화합니다
+                </div>
+            </div>
+
+            <div class="log-entry">
+                <div class="log-date">💡 학습 팁</div>
+                <div class="log-text">
+                    <strong>중화점 찾기:</strong><br>
+                    • 산과 염기를 번갈아 가며 조금씩 첨가하세요<br>
+                    • 지시약 색이 중성을 나타낼 때가 중화점입니다<br>
+                    • 그래프에서 H⁺와 OH⁻ 이온 수가 같아지는 지점을 찾아보세요<br><br>
+                    
+                    <strong>실험 아이디어:</strong><br>
+                    • 산만 계속 넣으면 어떻게 될까요?<br>
+                    • 중화 반응으로 온도가 얼마나 올라갈까요?<br>
+                    • 염의 종류가 다르면 중화 반응도 다를까요?<br>
+                    • 중화점 전후로 지시약 색 변화를 관찰해보세요<br><br>
+                    
+                    <strong>주의사항:</strong><br>
+                    • 이온을 너무 많이 추가하면 화면이 복잡해질 수 있습니다<br>
+                    • 필요시 초기화 버튼을 눌러 처음부터 시작하세요<br>
+                    • 실제 실험실에서는 보안경과 보호장구를 착용해야 합니다
+                </div>
+            </div>
+
+            <div class="log-entry">
+                <div class="log-date">🔬 과학적 배경</div>
+                <div class="log-text">
+                    <strong>중화 반응이란?</strong><br>
+                    산의 H⁺ 이온과 염기의 OH⁻ 이온이 결합하여 물(H₂O)을 생성하는 반응입니다.<br><br>
+                    
+                    <strong>화학 반응식:</strong><br>
+                    HCl + NaOH → NaCl + H₂O<br>
+                    (이온 반응식: H⁺ + OH⁻ → H₂O)<br><br>
+                    
+                    <strong>중화열:</strong><br>
+                    중화 반응은 <strong>발열 반응</strong>으로, 반응이 일어나면 열이 발생하여 온도가 상승합니다. 
+                    이 시뮬레이션에서는 중화 반응이 일어날 때마다 온도가 올라가는 것을 관찰할 수 있습니다.<br><br>
+                    
+                    <strong>구경꾼 이온:</strong><br>
+                    Na⁺와 Cl⁻는 반응에 직접 참여하지 않고 구경만 하는 이온입니다. 
+                    이들은 중화 후 염(NaCl)을 형성합니다.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
     <script>
+        // 모달 함수들
+function showTutorial() {
+    document.getElementById('tutorialModal').style.display = 'block';
+}
+
+function closeTutorial() {
+    document.getElementById('tutorialModal').style.display = 'none';
+}
+
+function showDevLog() {
+    document.getElementById('devLogModal').style.display = 'block';
+}
+
+function closeDevLog() {
+    document.getElementById('devLogModal').style.display = 'none';
+}
+
+// 모달 외부 클릭 시 닫기
+window.onclick = function(event) {
+    const tutorialModal = document.getElementById('tutorialModal');
+    const devLogModal = document.getElementById('devLogModal');
+    
+    if (event.target === tutorialModal) {
+        tutorialModal.style.display = 'none';
+    }
+    if (event.target === devLogModal) {
+        devLogModal.style.display = 'none';
+    }
+}
         class NeutralizationSimulation {
             constructor() {
     this.ions = [];
@@ -847,35 +813,7 @@
         });
     }
 }
-// 모달 함수들
-function showTutorial() {
-    document.getElementById('tutorialModal').style.display = 'block';
-}
 
-function closeTutorial() {
-    document.getElementById('tutorialModal').style.display = 'none';
-}
-
-function showDevLog() {
-    document.getElementById('devLogModal').style.display = 'block';
-}
-
-function closeDevLog() {
-    document.getElementById('devLogModal').style.display = 'none';
-}
-
-// 모달 외부 클릭 시 닫기
-window.onclick = function(event) {
-    const tutorialModal = document.getElementById('tutorialModal');
-    const devLogModal = document.getElementById('devLogModal');
-    
-    if (event.target === tutorialModal) {
-        tutorialModal.style.display = 'none';
-    }
-    if (event.target === devLogModal) {
-        devLogModal.style.display = 'none';
-    }
-}
 // 새로운 함수 추가: 겹침 확인
 checkOverlap(x, y, size) {
     for (let ionObj of this.ions) {
@@ -1616,7 +1554,8 @@ reset() {
         
         const sim = new NeutralizationSimulation();
     </script>
-    <div class="footer">
+    <!-- Footer -->
+<div class="footer">
     ⓒ 2025 충남삼성고등학교 신도경T<br>
     <a href="mailto:pantarei01@cnsa.hs.kr">pantarei01@cnsa.hs.kr</a>
 </div>
