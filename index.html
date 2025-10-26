@@ -489,7 +489,7 @@
                 </div>
             </div>
             
-            <!-- 그래프 영역 -->
+     <!-- 그래프 영역 -->
             <div class="graph-container">
                 <h3>📊 이온 수 변화 (상대값)</h3>
                 <canvas id="ionGraph"></canvas>
@@ -522,140 +522,143 @@
                 </div>
             </div>
         </div>
-    </div>
-<div class="modal" id="devLogModal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>📝 개발자 로그</h3>
-            <button class="modal-close" onclick="closeDevLog()">×</button>
-        </div>
-        <div class="modal-body">
-            <div class="log-entry">
-                <div class="log-date">2025. 10. 26. (일)</div>
-                <div class="log-text">
-                    <strong>중화반응 시뮬레이션 v1.0 출시</strong><br>
-                    산과 염기의 중화 반응을 시각적으로 학습할 수 있는 시뮬레이션 프로그램입니다.
-                </div>
-            </div>
-            
-            <div class="log-entry">
-                <div class="log-date">©️ 저작권 정보</div>
-                <div class="log-text">
-                    <strong>중화반응 시뮬레이션 v1.0</strong><br><br>
-                    ⓒ 2025 충남삼성고등학교 신도경 교사<br>
-                    이메일: <a href="mailto:pantarei01@cnsa.hs.kr">pantarei01@cnsa.hs.kr</a><br><br>
-                    
-                    본 프로그램은 교육 목적으로 제작되었으며, 자유롭게 사용하실 수 있습니다.<br>
-                    상업적 이용 시에는 제작자에게 문의해 주시기 바랍니다.
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal" id="tutorialModal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>📖 사용법 안내</h3>
-            <button class="modal-close" onclick="closeTutorial()">×</button>
-        </div>
-        <div class="modal-body">
-            <div class="log-entry">
-                <div class="log-date">🎯 프로그램 소개</div>
-                <div class="log-text">
-                    <strong>중화반응 시뮬레이션</strong>은 산과 염기의 중화 반응을 시각적으로 이해할 수 있는 교육용 프로그램입니다. 
-                    염산(HCl)과 수산화 나트륨(NaOH)의 중화 반응 과정을 이온 단위로 관찰하고, 
-                    온도 변화와 지시약 색 변화를 실시간으로 확인할 수 있습니다.
-                </div>
-            </div>
+    </div> <!-- container 닫기 -->
 
-            <div class="log-entry">
-                <div class="log-date">📚 기본 사용법</div>
-                <div class="log-text">
-                    <strong>1단계: 용액 첨가</strong><br>
-                    • <strong>산 첨가 💧</strong>: 염산(HCl)을 추가합니다. H⁺와 Cl⁻ 이온이 생성됩니다<br>
-                    • <strong>염기 첨가 💧</strong>: 수산화 나트륨(NaOH)을 추가합니다. Na⁺와 OH⁻ 이온이 생성됩니다<br>
-                    • 클릭할 때마다 5개의 이온이 추가됩니다<br><br>
-                    
-                    <strong>2단계: 중화 반응 관찰</strong><br>
-                    • H⁺(빨간색)와 OH⁻(파란색) 이온이 만나면 물(H₂O) 분자가 생성됩니다<br>
-                    • 중화 반응이 일어나면 온도가 상승합니다 (발열 반응)<br>
-                    • 반응하지 않는 이온(Na⁺, Cl⁻)은 남아있습니다<br><br>
-                    
-                    <strong>3단계: 지시약으로 pH 확인</strong><br>
-                    • <strong>BTB 용액</strong>: 산성(노란색) → 중성(초록색) → 염기성(파란색)<br>
-                    • <strong>페놀프탈레인</strong>: 산성/중성(무색) → 염기성(분홍색)<br>
-                    • <strong>없음</strong>: 온도 변화 그래프를 관찰할 수 있습니다<br><br>
-                    
-                    <strong>4단계: 그래프 분석</strong><br>
-                    • 오른쪽 그래프에서 각 이온의 수 변화를 확인하세요<br>
-                    • 중화점에서는 H⁺와 OH⁻ 이온 수가 같아집니다<br>
-                    • 통계 패널에서 현재 이온 수와 생성된 물 분자 수를 확인할 수 있습니다
-                </div>
+    <!-- 튜토리얼 모달 -->
+    <div class="modal" id="tutorialModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📖 사용법 안내</h3>
+                <button class="modal-close" onclick="closeTutorial()">×</button>
             </div>
-
-            <div class="log-entry">
-                <div class="log-date">⚙️ 고급 기능</div>
-                <div class="log-text">
-                    <strong>표시 옵션:</strong><br>
-                    • <strong>이온식</strong>: 화학 기호로 이온을 표시합니다 (H⁺, OH⁻, Na⁺, Cl⁻)<br>
-                    • <strong>도형</strong>: 이온을 다양한 도형으로 표시합니다<br>
-                    &nbsp;&nbsp;- H⁺: 빨간 삼각형 ▼<br>
-                    &nbsp;&nbsp;- OH⁻: 파란 별 ★<br>
-                    &nbsp;&nbsp;- Na⁺: 보라 사각형 ■<br>
-                    &nbsp;&nbsp;- Cl⁻: 파란 원 ●<br><br>
-                    
-                    <strong>제어 옵션:</strong><br>
-                    • <strong>반응하지 않는 이온 숨기기</strong>: Na⁺와 Cl⁻ 이온을 숨겨 중화 반응에 집중할 수 있습니다<br>
-                    • <strong>물분자 사라지지 않기</strong>: 생성된 물 분자를 계속 화면에 표시합니다<br>
-                    • <strong>일시정지</strong>: 이온의 움직임을 멈춰 관찰할 수 있습니다<br>
-                    • <strong>그래프 초기화</strong>: 그래프 데이터만 초기화합니다
+            <div class="modal-body">
+                <div class="log-entry">
+                    <div class="log-date">🎯 프로그램 소개</div>
+                    <div class="log-text">
+                        <strong>중화반응 시뮬레이션</strong>은 산과 염기의 중화 반응을 시각적으로 이해할 수 있는 교육용 프로그램입니다. 
+                        염산(HCl)과 수산화 나트륨(NaOH)의 중화 반응 과정을 이온 단위로 관찰하고, 
+                        온도 변화와 지시약 색 변화를 실시간으로 확인할 수 있습니다.
+                    </div>
                 </div>
-            </div>
 
-            <div class="log-entry">
-                <div class="log-date">💡 학습 팁</div>
-                <div class="log-text">
-                    <strong>중화점 찾기:</strong><br>
-                    • 산과 염기를 번갈아 가며 조금씩 첨가하세요<br>
-                    • 지시약 색이 중성을 나타낼 때가 중화점입니다<br>
-                    • 그래프에서 H⁺와 OH⁻ 이온 수가 같아지는 지점을 찾아보세요<br><br>
-                    
-                    <strong>실험 아이디어:</strong><br>
-                    • 산만 계속 넣으면 어떻게 될까요?<br>
-                    • 중화 반응으로 온도가 얼마나 올라갈까요?<br>
-                    • 염의 종류가 다르면 중화 반응도 다를까요?<br>
-                    • 중화점 전후로 지시약 색 변화를 관찰해보세요<br><br>
-                    
-                    <strong>주의사항:</strong><br>
-                    • 이온을 너무 많이 추가하면 화면이 복잡해질 수 있습니다<br>
-                    • 필요시 초기화 버튼을 눌러 처음부터 시작하세요<br>
-                    • 실제 실험실에서는 보안경과 보호장구를 착용해야 합니다
+                <div class="log-entry">
+                    <div class="log-date">📚 기본 사용법</div>
+                    <div class="log-text">
+                        <strong>1단계: 용액 첨가</strong><br>
+                        • <strong>산 첨가 💧</strong>: 염산(HCl)을 추가합니다. H⁺와 Cl⁻ 이온이 생성됩니다<br>
+                        • <strong>염기 첨가 💧</strong>: 수산화 나트륨(NaOH)을 추가합니다. Na⁺와 OH⁻ 이온이 생성됩니다<br>
+                        • 클릭할 때마다 5개의 이온이 추가됩니다<br><br>
+                        
+                        <strong>2단계: 중화 반응 관찰</strong><br>
+                        • H⁺(빨간색)와 OH⁻(파란색) 이온이 만나면 물(H₂O) 분자가 생성됩니다<br>
+                        • 중화 반응이 일어나면 온도가 상승합니다 (발열 반응)<br>
+                        • 반응하지 않는 이온(Na⁺, Cl⁻)은 남아있습니다<br><br>
+                        
+                        <strong>3단계: 지시약으로 pH 확인</strong><br>
+                        • <strong>BTB 용액</strong>: 산성(노란색) → 중성(초록색) → 염기성(파란색)<br>
+                        • <strong>페놀프탈레인</strong>: 산성/중성(무색) → 염기성(분홍색)<br>
+                        • <strong>없음</strong>: 온도 변화 그래프를 관찰할 수 있습니다<br><br>
+                        
+                        <strong>4단계: 그래프 분석</strong><br>
+                        • 오른쪽 그래프에서 각 이온의 수 변화를 확인하세요<br>
+                        • 중화점에서는 H⁺와 OH⁻ 이온 수가 같아집니다<br>
+                        • 통계 패널에서 현재 이온 수와 생성된 물 분자 수를 확인할 수 있습니다
+                    </div>
                 </div>
-            </div>
 
-            <div class="log-entry">
-                <div class="log-date">🔬 과학적 배경</div>
-                <div class="log-text">
-                    <strong>중화 반응이란?</strong><br>
-                    산의 H⁺ 이온과 염기의 OH⁻ 이온이 결합하여 물(H₂O)을 생성하는 반응입니다.<br><br>
-                    
-                    <strong>화학 반응식:</strong><br>
-                    HCl + NaOH → NaCl + H₂O<br>
-                    (이온 반응식: H⁺ + OH⁻ → H₂O)<br><br>
-                    
-                    <strong>중화열:</strong><br>
-                    중화 반응은 <strong>발열 반응</strong>으로, 반응이 일어나면 열이 발생하여 온도가 상승합니다. 
-                    이 시뮬레이션에서는 중화 반응이 일어날 때마다 온도가 올라가는 것을 관찰할 수 있습니다.<br><br>
-                    
-                    <strong>구경꾼 이온:</strong><br>
-                    Na⁺와 Cl⁻는 반응에 직접 참여하지 않고 구경만 하는 이온입니다. 
-                    이들은 중화 후 염(NaCl)을 형성합니다.
+                <div class="log-entry">
+                    <div class="log-date">⚙️ 고급 기능</div>
+                    <div class="log-text">
+                        <strong>표시 옵션:</strong><br>
+                        • <strong>이온식</strong>: 화학 기호로 이온을 표시합니다 (H⁺, OH⁻, Na⁺, Cl⁻)<br>
+                        • <strong>도형</strong>: 이온을 다양한 도형으로 표시합니다<br>
+                        &nbsp;&nbsp;- H⁺: 빨간 삼각형 ▼<br>
+                        &nbsp;&nbsp;- OH⁻: 파란 별 ★<br>
+                        &nbsp;&nbsp;- Na⁺: 보라 사각형 ■<br>
+                        &nbsp;&nbsp;- Cl⁻: 파란 원 ●<br><br>
+                        
+                        <strong>제어 옵션:</strong><br>
+                        • <strong>반응하지 않는 이온 숨기기</strong>: Na⁺와 Cl⁻ 이온을 숨겨 중화 반응에 집중할 수 있습니다<br>
+                        • <strong>물분자 사라지지 않기</strong>: 생성된 물 분자를 계속 화면에 표시합니다<br>
+                        • <strong>일시정지</strong>: 이온의 움직임을 멈춰 관찰할 수 있습니다<br>
+                        • <strong>그래프 초기화</strong>: 그래프 데이터만 초기화합니다
+                    </div>
+                </div>
+
+                <div class="log-entry">
+                    <div class="log-date">💡 학습 팁</div>
+                    <div class="log-text">
+                        <strong>중화점 찾기:</strong><br>
+                        • 산과 염기를 번갈아 가며 조금씩 첨가하세요<br>
+                        • 지시약 색이 중성을 나타낼 때가 중화점입니다<br>
+                        • 그래프에서 H⁺와 OH⁻ 이온 수가 같아지는 지점을 찾아보세요<br><br>
+                        
+                        <strong>실험 아이디어:</strong><br>
+                        • 산만 계속 넣으면 어떻게 될까요?<br>
+                        • 중화 반응으로 온도가 얼마나 올라갈까요?<br>
+                        • 염의 종류가 다르면 중화 반응도 다를까요?<br>
+                        • 중화점 전후로 지시약 색 변화를 관찰해보세요<br><br>
+                        
+                        <strong>주의사항:</strong><br>
+                        • 이온을 너무 많이 추가하면 화면이 복잡해질 수 있습니다<br>
+                        • 필요시 초기화 버튼을 눌러 처음부터 시작하세요<br>
+                        • 실제 실험실에서는 보안경과 보호장구를 착용해야 합니다
+                    </div>
+                </div>
+
+                <div class="log-entry">
+                    <div class="log-date">🔬 과학적 배경</div>
+                    <div class="log-text">
+                        <strong>중화 반응이란?</strong><br>
+                        산의 H⁺ 이온과 염기의 OH⁻ 이온이 결합하여 물(H₂O)을 생성하는 반응입니다.<br><br>
+                        
+                        <strong>화학 반응식:</strong><br>
+                        HCl + NaOH → NaCl + H₂O<br>
+                        (이온 반응식: H⁺ + OH⁻ → H₂O)<br><br>
+                        
+                        <strong>중화열:</strong><br>
+                        중화 반응은 <strong>발열 반응</strong>으로, 반응이 일어나면 열이 발생하여 온도가 상승합니다. 
+                        이 시뮬레이션에서는 중화 반응이 일어날 때마다 온도가 올라가는 것을 관찰할 수 있습니다.<br><br>
+                        
+                        <strong>구경꾼 이온:</strong><br>
+                        Na⁺와 Cl⁻는 반응에 직접 참여하지 않고 구경만 하는 이온입니다. 
+                        이들은 중화 후 염(NaCl)을 형성합니다.
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
+    <!-- 개발자 로그 모달 -->
+    <div class="modal" id="devLogModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📝 개발자 로그</h3>
+                <button class="modal-close" onclick="closeDevLog()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="log-entry">
+                    <div class="log-date">2025. 10. 26. (일)</div>
+                    <div class="log-text">
+                        <strong>중화반응 시뮬레이션 v1.0 출시</strong><br>
+                        산과 염기의 중화 반응을 시각적으로 학습할 수 있는 시뮬레이션 프로그램입니다.
+                    </div>
+                </div>
+                
+                <div class="log-entry">
+                    <div class="log-date">©️ 저작권 정보</div>
+                    <div class="log-text">
+                        <strong>중화반응 시뮬레이션 v1.0</strong><br><br>
+                        ⓒ 2025 충남삼성고등학교 신도경 교사<br>
+                        이메일: <a href="mailto:pantarei01@cnsa.hs.kr">pantarei01@cnsa.hs.kr</a><br><br>
+                        
+                        본 프로그램은 교육 목적으로 제작되었으며, 자유롭게 사용하실 수 있습니다.<br>
+                        상업적 이용 시에는 제작자에게 문의해 주시기 바랍니다.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         // 모달 함수들
 function showTutorial() {
