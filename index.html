@@ -1066,16 +1066,18 @@ checkOverlap(x, y, size) {
             
             updateIonDisplay(ion) {
                 const type = ion.dataset.type;
+                
                 if (this.isShapeMode) {
+                    // 도형 모드: 텍스트 제거, 모든 클래스 초기화 후 도형 클래스 추가
                     ion.textContent = '';
-                    ion.classList.add('shape-mode');
-                    
-                    // 현재 매핑된 도형 적용
                     const shape = this.shapeMapping[type];
-                    ion.className = `ion ${type} shape-mode shape-${shape}`;
+                    ion.className = `ion ${type} shape-${shape}`;
                     
                 } else {
-                    ion.classList.remove('shape-mode');
+                    // 이온식 모드: 모든 shape 관련 클래스 제거하고 기본 클래스만 유지
+                    ion.className = `ion ${type}`;
+                    
+                    // 이온 텍스트 추가
                     if (type === 'H') ion.textContent = 'H⁺';
                     else if (type === 'OH') ion.textContent = 'OH⁻';
                     else if (type === 'Na') ion.textContent = 'Na⁺';
