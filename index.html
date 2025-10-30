@@ -1508,7 +1508,7 @@ checkNeutralization() {
                         ctx.stroke();
                         ctx.setLineDash([]);
                         
-                        // 도형 모드일 때 범례에 도형 기호 추가
+                        // 도형 모드일 때 범례에 도형 기호만 표시
                         let labelText = item.label;
                         if (this.isShapeMode) {
                             const shape = this.shapeMapping[item.key];
@@ -1518,7 +1518,7 @@ checkNeutralization() {
                                 'square': '■',
                                 'circle': '●'
                             };
-                            labelText = `${shapeSymbol[shape]} ${item.label}`;
+                            labelText = shapeSymbol[shape];  // ← 도형 기호만 표시
                         }
                         
                         ctx.fillStyle = '#333';
