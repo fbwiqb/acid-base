@@ -262,11 +262,68 @@
         background: #0088ff !important;
         border-radius: 50%;
     }
-
-    .stat-label {
-        font-weight: 500;
-        color: #666;
-    }
+    /* 도형별 클래스 */
+        .ion.shape-triangle {
+            width: 0 !important;
+            height: 0 !important;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 35px solid currentColor;
+            border-radius: 0;
+            background: none !important;
+        }
+        
+        .ion.shape-triangle.H { border-bottom-color: #ff5252; }
+        .ion.shape-triangle.OH { border-bottom-color: #339af0; }
+        .ion.shape-triangle.Na { border-bottom-color: #1e3a5f; }
+        .ion.shape-triangle.Cl { border-bottom-color: #0088ff; }
+        
+        .ion.shape-star {
+            width: 40px !important;
+            height: 40px !important;
+            background: none !important;
+            position: relative;
+        }
+        
+        .ion.shape-star::before {
+            content: '★';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 35px;
+        }
+        
+        .ion.shape-star.H::before { color: #ff5252; }
+        .ion.shape-star.OH::before { color: #339af0; }
+        .ion.shape-star.Na::before { color: #1e3a5f; }
+        .ion.shape-star.Cl::before { color: #0088ff; }
+        
+        .ion.shape-square {
+            width: 40px !important;
+            height: 40px !important;
+            border-radius: 0 !important;
+        }
+        
+        .ion.shape-square.H { background: #ff5252 !important; }
+        .ion.shape-square.OH { background: #339af0 !important; }
+        .ion.shape-square.Na { background: #1e3a5f !important; }
+        .ion.shape-square.Cl { background: #0088ff !important; }
+        
+        .ion.shape-circle {
+            width: 40px !important;
+            height: 40px !important;
+            border-radius: 50% !important;
+        }
+        
+        .ion.shape-circle.H { background: #ff5252 !important; }
+        .ion.shape-circle.OH { background: #339af0 !important; }
+        .ion.shape-circle.Na { background: #1e3a5f !important; }
+        .ion.shape-circle.Cl { background: #0088ff !important; }
+            .stat-label {
+                font-weight: 500;
+                color: #666;
+            }
     
     .stat-value {
         font-weight: bold;
@@ -601,25 +658,24 @@
                         <option value="phenol">페놀프탈레인</option>
                     </select>
                 </div>
-                
-                <div class="control-section">
-                    <h3>👁️ 표시 옵션</h3>
-                    <div class="toggle-group">
-                        <button class="toggle-btn active" id="ionModeBtn">이온식</button>
-                        <button class="toggle-btn" id="shapeModeBtn">도형</button>
-                    </div>
-                    <button id="toggleSpectatorBtn">반응하지 않는 이온 숨기기</button>
-                    <button id="persistWaterBtn">물분자 사라지지 않기</button>
-                </div>
-                
-                <div class="control-section">
-                    <h3>🔄 컨트롤</h3>
-                    <button id="resetBtn">초기화</button>
-                    <button id="pauseBtn">일시정지</button>
-                    <button id="resetGraphBtn">그래프 초기화</button>
-                </div>
-            </div>
-            
+    
+<div class="control-section">
+    <h3>👁️ 표시 옵션</h3>
+    <div class="toggle-group">
+        <button class="toggle-btn active" id="ionModeBtn">이온식</button>
+        <button class="toggle-btn" id="shapeModeBtn">도형</button>
+    </div>
+    <button id="shuffleShapesBtn">도형 뒤섞기 🔀</button>
+    <button id="toggleSpectatorBtn">반응하지 않는 이온 숨기기</button>
+    <button id="persistWaterBtn">물분자 사라지지 않기</button>
+</div>
+
+<div class="control-section">
+    <h3>🔄 컨트롤</h3>
+    <button id="resetBtn">초기화</button>
+    <button id="pauseBtn">일시정지</button>
+    <button id="resetGraphBtn">그래프 초기화</button>
+</div>
             <!-- 시뮬레이션 영역 -->
             <div class="simulation-area">
                 <div style="text-align: center;">
@@ -843,7 +899,16 @@ window.onclick = function(event) {
     this.neutralizationCount = 0;
     this.waterMoleculeCount = 0;
     this.waterAnimations = [];
-    this.safetyViolation = false;  // 추가
+    this.safetyViolation = false;
+    
+    // 도형 매핑 추가
+    this.shapeMapping = {
+        'H': 'triangle',
+        'OH': 'star',
+        'Na': 'square',
+        'Cl': 'circle'
+    };
+    
     this.graphData = {
         additions: [],
         H: [],
@@ -871,6 +936,7 @@ window.onclick = function(event) {
                 document.getElementById('baseDropper').addEventListener('click', () => this.addBase());
                 document.getElementById('ionModeBtn').addEventListener('click', () => this.setDisplayMode('ion'));
                 document.getElementById('shapeModeBtn').addEventListener('click', () => this.setDisplayMode('shape'));
+                document.getElementById('shuffleShapesBtn').addEventListener('click', () => this.shuffleShapes());
                 document.getElementById('toggleSpectatorBtn').addEventListener('click', () => this.toggleSpectatorIons());
                 document.getElementById('persistWaterBtn').addEventListener('click', () => this.togglePersistWater());
                 document.getElementById('resetBtn').addEventListener('click', () => this.reset());
@@ -980,6 +1046,11 @@ checkOverlap(x, y, size) {
                 if (this.isShapeMode) {
                     ion.textContent = '';
                     ion.classList.add('shape-mode');
+                    
+                    // 현재 매핑된 도형 적용
+                    const shape = this.shapeMapping[type];
+                    ion.className = `ion ${type} shape-mode shape-${shape}`;
+                    
                 } else {
                     ion.classList.remove('shape-mode');
                     if (type === 'H') ion.textContent = 'H⁺';
@@ -998,7 +1069,36 @@ checkOverlap(x, y, size) {
                     this.updateIonDisplay(ionObj.element);
                 });
             }
-            
+            shuffleShapes() {
+                    if (!this.isShapeMode) {
+                        alert('도형 모드에서만 사용할 수 있습니다!');
+                        return;
+                    }
+                    
+                    // 도형 배열
+                    const shapes = ['triangle', 'star', 'square', 'circle'];
+                    const ions = ['H', 'OH', 'Na', 'Cl'];
+                    
+                    // Fisher-Yates 셔플 알고리즘
+                    const shuffled = [...shapes];
+                    for (let i = shuffled.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                    }
+                    
+                    // 새로운 매핑 적용
+                    ions.forEach((ion, index) => {
+                        this.shapeMapping[ion] = shuffled[index];
+                    });
+                    
+                    // 모든 이온 업데이트
+                    this.ions.forEach(ionObj => {
+                        this.updateIonDisplay(ionObj.element);
+                    });
+                    
+                    // 그래프 다시 그리기 (범례 업데이트)
+                    this.drawGraph();
+                }
             toggleSpectatorIons() {
                 this.spectatorHidden = !this.spectatorHidden;
                 const btn = document.getElementById('toggleSpectatorBtn');
@@ -1363,30 +1463,44 @@ checkNeutralization() {
                     ctx.setLineDash([]);
                 });
                 
-                let legendY = 20;
-                const legendItems = [
-                    { key: 'H', label: 'H⁺', dash: [] },
-                    { key: 'OH', label: 'OH⁻', dash: [] },
-                    { key: 'Na', label: 'Na⁺', dash: [5, 3] },
-                    { key: 'Cl', label: 'Cl⁻', dash: [3, 3] }
-                ];
-                
-                legendItems.forEach(item => {
-                    const config = lineConfig[item.key];
-                    ctx.strokeStyle = config.color;
-                    ctx.lineWidth = 2;
-                    ctx.setLineDash(item.dash);
-                    ctx.beginPath();
-                    ctx.moveTo(width - 80, legendY - 2);
-                    ctx.lineTo(width - 60, legendY - 2);
-                    ctx.stroke();
-                    ctx.setLineDash([]);
+                // drawGraph() 함수의 범례 그리는 부분 (legendY = 20; 부터)
+                    let legendY = 20;
+                    const legendItems = [
+                        { key: 'H', label: 'H⁺', dash: [] },
+                        { key: 'OH', label: 'OH⁻', dash: [] },
+                        { key: 'Na', label: 'Na⁺', dash: [5, 3] },
+                        { key: 'Cl', label: 'Cl⁻', dash: [3, 3] }
+                    ];
                     
-                    ctx.fillStyle = '#333';
-                    ctx.font = '10px sans-serif';
-                    ctx.fillText(item.label, width - 55, legendY);
-                    legendY += 15;
-                });
+                    legendItems.forEach(item => {
+                        const config = lineConfig[item.key];
+                        ctx.strokeStyle = config.color;
+                        ctx.lineWidth = 2;
+                        ctx.setLineDash(item.dash);
+                        ctx.beginPath();
+                        ctx.moveTo(width - 80, legendY - 2);
+                        ctx.lineTo(width - 60, legendY - 2);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                        
+                        // 도형 모드일 때 범례에 도형 기호 추가
+                        let labelText = item.label;
+                        if (this.isShapeMode) {
+                            const shape = this.shapeMapping[item.key];
+                            const shapeSymbol = {
+                                'triangle': '▼',
+                                'star': '★',
+                                'square': '■',
+                                'circle': '●'
+                            };
+                            labelText = `${shapeSymbol[shape]} ${item.label}`;
+                        }
+                        
+                        ctx.fillStyle = '#333';
+                        ctx.font = '10px sans-serif';
+                        ctx.fillText(labelText, width - 55, legendY);
+                        legendY += 15;
+                    });
             }
 
             showSafetyViolation() {
