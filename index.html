@@ -282,17 +282,19 @@
             width: 40px !important;
             height: 40px !important;
             background: none !important;
-            position: relative;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 35px;
+            line-height: 1;
         }
         
-        .ion.shape-star::before {
-            content: '★';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 35px;
-        }
+        .ion.shape-star.H { color: #ff5252; }
+        .ion.shape-star.OH { color: #339af0; }
+        .ion.shape-star.Na { color: #1e3a5f; }
+        .ion.shape-star.Cl { color: #0088ff; }
+        
+        /* ::before 관련 CSS는 삭제 */
         
         .ion.shape-star.H::before { color: #ff5252; }
         .ion.shape-star.OH::before { color: #339af0; }
@@ -1064,27 +1066,30 @@ checkOverlap(x, y, size) {
     return false;
 }
             
-            updateIonDisplay(ion) {
-                const type = ion.dataset.type;
-                
-                if (this.isShapeMode) {
-                    // 도형 모드: 텍스트 제거, 모든 클래스 초기화 후 도형 클래스 추가
-                    ion.textContent = '';
-                    const shape = this.shapeMapping[type];
-                    ion.className = `ion ${type} shape-${shape}`;
+                updateIonDisplay(ion) {
+                    const type = ion.dataset.type;
                     
-                } else {
-                    // 이온식 모드: 모든 shape 관련 클래스 제거하고 기본 클래스만 유지
-                    ion.className = `ion ${type}`;
-                    
-                    // 이온 텍스트 추가
-                    if (type === 'H') ion.textContent = 'H⁺';
-                    else if (type === 'OH') ion.textContent = 'OH⁻';
-                    else if (type === 'Na') ion.textContent = 'Na⁺';
-                    else if (type === 'Cl') ion.textContent = 'Cl⁻';
+                    if (this.isShapeMode) {
+                        const shape = this.shapeMapping[type];
+                        
+                        // 별 모양은 직접 텍스트로 처리
+                        if (shape === 'star') {
+                            ion.className = `ion ${type} shape-star`;
+                            ion.textContent = '★';
+                        } else {
+                            ion.textContent = '';
+                            ion.className = `ion ${type} shape-${shape}`;
+                        }
+                        
+                    } else {
+                        ion.className = `ion ${type}`;
+                        
+                        if (type === 'H') ion.textContent = 'H⁺';
+                        else if (type === 'OH') ion.textContent = 'OH⁻';
+                        else if (type === 'Na') ion.textContent = 'Na⁺';
+                        else if (type === 'Cl') ion.textContent = 'Cl⁻';
+                    }
                 }
-            }
-            
             setDisplayMode(mode) {
                 this.isShapeMode = (mode === 'shape');
                 document.getElementById('ionModeBtn').classList.toggle('active', mode === 'ion');
